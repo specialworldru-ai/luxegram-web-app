@@ -67,19 +67,27 @@ function send() {
     input.value = '';
 }
 
+// 2. ОТРИСОВКА СООБЩЕНИЙ С КОММЕНТАРИЯМИ
 function listenMessages(chatKey) {
     db.ref('chats/' + chatKey).on('value', (snapshot) => {
         let div = document.getElementById('messages');
         div.innerHTML = "";
         let data = snapshot.val();
+        
         for (let id in data) {
             let msg = data[id];
             let isOwn = msg.from === currentUser;
-            let comment = chatKey.startsWith("channel_") ? `<div class="comment-link">💬 Обсудить</div>` : "";
+            
+            // Если это канал, добавляем кнопку "Обсудить"
+            let commentHtml = chatKey.startsWith("channel_") 
+                ? `<div class="comment-link" onclick="event.stopPropagation(); alert('Тут будут комментарии!')">💬 Обсудить</div>` 
+                : "";
+
             div.innerHTML += `
-                <div class="msg ${isOwn ? 'own' : 'others'}" oncontextmenu="showContextMenu(event, '${chatKey}', '${id}', '${msg.text}')">
+                <div class="msg ${isOwn ? 'own' : 'others'}" 
+                     oncontextmenu="showContextMenu(event, '${chatKey}', '${id}', '${msg.text}')">
                     <div class="msg-content">${msg.text}</div>
-                    ${comment}
+                    ${commentHtml}
                     <span class="msg-time">${msg.time}</span>
                 </div>`;
         }
@@ -109,20 +117,57 @@ function getChatKey(u1, u2) {
     return 'private_' + [u1, u2].sort().join('_');
 }
 
+// 1. РЕНДЕР СПИСКА КОНТАКТОВ И КАНАЛОВ
 function renderContacts() {
     let list = document.getElementById('chat-list');
-    list.innerHTML = "";
-    // Заметки
-    list.innerHTML += `<div class="chat-item" onclick="selectChat('Заметки')"><div class="chat-avatar" style="background:#7b2ff7; display:flex; align-items:center; justify-content:center;">🔖</div><div class="chat-info"><span class="chat-name">Saved Messages</span></div></div>`;
-    // Каналы
-    [{n:"LuxeNews",i:"💎",c:"#f39c12"},{n:"CryptoWorld",i:"₿",c:"#2ecc71"}].forEach(ch => {
-        list.innerHTML += `<div class="chat-item" onclick="selectChannel('${ch.n}')"><div class="chat-avatar" style="background:${ch.c}; display:flex; align-items:center; justify-content:center;">${ch.i}</div><div class="chat-info"><span class="chat-name">${ch.n}</span><p class="chat-last-msg">канал</p></div></div>`;
+    list.innerHTML = ""; // Чистим список перед отрисовкой
+
+    // Блок Избранного (Заметки)
+    list.innerHTML += `
+        <div class="chat-item special" onclick="selectChat('Заметки')">
+            <div class="chat-avatar" style="background:#7b2ff7; color:white;">🔖</div>
+            <div class="chat-info">
+                <span class="chat-name">Saved Messages</span>
+                <p class="chat-last-msg">Личные заметки</p>
+            </div>
+        </div>`;
+
+    // Блок Каналов
+    const myChannels = [
+        {n:"LuxeNews", i:"💎", c:"#f39c12"},
+        {n:"CryptoWorld", i:"₿", c:"#2ecc71"}
+    ];
+    
+    myChannels.forEach(ch => {
+        list.innerHTML += `
+            <div class="chat-item" onclick="selectChannel('${ch.n}')">
+                <div class="chat-avatar" style="background:${ch.c}; color:white;">${ch.i}</div>
+                <div class="chat-info">
+                    <span class="chat-name">${ch.n}</span>
+                    <p class="chat-last-msg">официальный канал</p>
+                </div>
+            </div>`;
     });
-    // Удаление бага с "news"
-    let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]").filter(n => n.toLowerCase() !== 'news' && n !== 'LuxeNews');
-    localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
+
+    // Блок Пользователей (Контакты)
+    let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
+    
+    // Фильтруем список, чтобы убрать системный мусор и дубли каналов
+    contacts = contacts.filter(n => 
+        n.toLowerCase() !== 'news' && 
+        n !== 'LuxeNews' && 
+        n !== 'CryptoWorld'
+    );
+
     contacts.forEach(n => {
-        list.innerHTML += `<div class="chat-item" onclick="selectChat('${n}')"><img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${n}"><div class="chat-info"><span class="chat-name">${n}</span></div></div>`;
+        list.innerHTML += `
+            <div class="chat-item" onclick="selectChat('${n}')">
+                <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${n}">
+                <div class="chat-info">
+                    <span class="chat-name">${n}</span>
+                    <p class="chat-last-msg">написать сообщение...</p>
+                </div>
+            </div>`;
     });
 }
 
