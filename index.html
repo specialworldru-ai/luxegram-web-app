@@ -21,35 +21,19 @@
             <img id="p-avatar" src="" alt="avatar">
             <h2 id="p-name"></h2>
             <p id="p-username"></p>
-            <p id="p-bio-text" style="font-size: 0.9em; color: #ccc; margin: 10px 0;"></p>
-            <textarea id="p-bio-edit" style="display:none;"></textarea>
-            
-            <div id="profile-actions">
-                </div>
-        </div>
-    </div>
-
-    <div id="channel-modal" class="modal" style="display: none;">
-        <div class="auth-box">
-            <span class="close-btn" onclick="closeModal('channel-modal')">&times;</span>
-            <h3>Создать канал</h3>
-            <input type="text" id="chan-name" placeholder="Название канала...">
-            <input type="text" id="chan-link" placeholder="Юзернейм канала (напр. news)...">
-            <button onclick="createChannel()">Создать</button>
+            <textarea id="p-bio-edit" placeholder="Расскажите о себе..."></textarea>
+            <div id="profile-actions"></div>
         </div>
     </div>
 
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="profile-header" onclick="openMyProfile()">
-                    <img id="user-avatar" src="" alt="ava">
-                    <div class="user-info">
-                        <strong id="display-name"></strong>
-                        <div class="status-online">Online</div>
-                    </div>
+            <div class="profile-header" onclick="openMyProfile()" style="cursor: pointer;">
+                <img id="user-avatar" src="" alt="ava">
+                <div class="user-info">
+                    <strong id="display-name"></strong>
+                    <div class="status-online">Online</div>
                 </div>
-                <div class="settings-icon" onclick="openChannelCreator()">⚙️</div>
             </div>
             
             <div class="search-box">
@@ -71,6 +55,10 @@
             </div>
         </main>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>

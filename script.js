@@ -1,3 +1,19 @@
+// 1. КОНФИГУРАЦИЯ FIREBASE (Твои данные уже тут)
+const firebaseConfig = {
+  apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
+  authDomain: "luxegram-f6e9a.firebaseapp.com",
+  databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
+  projectId: "luxegram-f6e9a",
+  storageBucket: "luxegram-f6e9a.firebasestorage.app",
+  messagingSenderId: "64533495549",
+  appId: "1:64533495549:web:8f60c9243ca771204b4894",
+  measurementId: "G-HXDSC0YVJV"
+};
+
+// 2. ИНИЦИАЛИЗАЦИЯ
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
 
@@ -18,216 +34,94 @@ function register() {
     }
 }
 
-// ПОИСК (Переработанный)
-function searchProfile() {
-    let query = document.getElementById('searchUser').value.trim().replace('@', '');
-    if (!query) return;
+// ОТПРАВКА СООБЩЕНИЯ
+function send() {
+    let input = document.getElementById('msgInput');
+    let text = input.value.trim();
+    if (!text || !activeChat) return;
 
-    // 1. Проверяем, не твой ли это ник
-    if (query === currentUser) {
-        openProfile(currentUser, true);
-        return;
-    }
+    let chatKey = getChatKey(currentUser, activeChat);
+    let msgData = {
+        id: Date.now(),
+        from: currentUser,
+        text: text,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        type: text.match(/\.(jpeg|jpg|gif|png)$/) ? 'image' : 'text'
+    };
 
-    // 2. Ищем в списке созданных каналов
-    let allChannels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-    let foundChannel = allChannels.find(c => c.link === query);
+    db.ref('chats/' + chatKey).push(msgData);
+    input.value = '';
+}
 
-    if (foundChannel) {
-        // Если это канал — сразу открываем его
-        selectChat(foundChannel.link, true);
-        document.getElementById('searchUser').value = "";
-        return;
-    }
+// СЛУШАТЕЛЬ (ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ)
+function listenMessages(chatKey) {
+    db.ref('chats/' + chatKey).on('value', (snapshot) => {
+        let messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = "";
+        let data = snapshot.val();
+        
+        for (let id in data) {
+            let msg = data[id];
+            let isOwn = msg.from === currentUser;
+            let content = msg.type === 'image' 
+                ? `<img src="${msg.text}" style="max-width:200px; border-radius:10px;">` 
+                : msg.text;
 
-    // 3. Ищем в списке контактов (людей)
-    let allContacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
-    let foundContact = allContacts.includes(query);
+            messagesDiv.innerHTML += `
+                <div class="msg ${isOwn ? 'own' : 'others'}">
+                    <span class="msg-author">${msg.from}</span>
+                    <div class="msg-content">${content}</div>
+                    <span class="msg-time">${msg.time}</span>
+                    ${isOwn ? `<button class="del-btn" onclick="deleteMsg('${id}')">×</button>` : ''}
+                </div>`;
+        }
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+}
 
-    if (foundContact) {
-        openProfile(query, false);
-    } else {
-        // 4. Если ничего не нашли — выводим сообщение
-        alert("Пользователь или канал @" + query + " не найден");
+// УДАЛЕНИЕ СООБЩЕНИЯ
+function deleteMsg(msgFirebaseId) {
+    if (confirm("Удалить сообщение для всех?")) {
+        let chatKey = getChatKey(currentUser, activeChat);
+        db.ref('chats/' + chatKey + '/' + msgFirebaseId).remove();
     }
 }
 
-// Улучшенная функция открытия профиля (только для людей)
-function openProfile(name, isMe) {
-    const modal = document.getElementById('profile-modal');
-    modal.style.display = 'flex';
-    
-    // Генерируем аватарку (для людей — bottts)
-    document.getElementById('p-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
-    document.getElementById('p-name').innerText = name;
-    document.getElementById('p-username').innerText = "@" + name;
-    
-    let actions = document.getElementById('profile-actions');
-    let bioEdit = document.getElementById('p-bio-edit');
-    let bioText = document.getElementById('p-bio-text');
-    
-    actions.innerHTML = "";
-    
-    if (isMe) {
-        bioEdit.style.display = "block";
-        bioText.style.display = "none";
-        bioEdit.value = localStorage.getItem('bio_' + name) || "";
-        actions.innerHTML = `<button onclick="saveProfile()">Сохранить</button>`;
-    } else {
-        bioEdit.style.display = "none";
-        bioText.style.display = "block";
-        bioText.innerText = localStorage.getItem('bio_' + name) || "Этот пользователь еще не заполнил профиль";
-        actions.innerHTML = `
-            <button class="btn-action" onclick="startChat('${name}')">Написать</button>
-            <button class="btn-call" onclick="alert('Звонок недоступен')">Позвонить</button>
-        `;
-    }
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+function getChatKey(user1, user2) {
+    if (user2 === 'Заметки') return 'notes_' + user1;
+    return 'private_' + [user1, user2].sort().join('_');
 }
 
-function openMyProfile() { openProfile(currentUser, true); }
-
-function openProfile(name, isMe) {
-    const modal = document.getElementById('profile-modal');
-    modal.style.display = 'flex';
-    document.getElementById('p-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
-    document.getElementById('p-name').innerText = name;
-    document.getElementById('p-username').innerText = "@" + name;
-    
-    let actions = document.getElementById('profile-actions');
-    let bioEdit = document.getElementById('p-bio-edit');
-    let bioText = document.getElementById('p-bio-text');
-    
-    actions.innerHTML = "";
-    
-    if (isMe) {
-        bioEdit.style.display = "block";
-        bioText.style.display = "none";
-        bioEdit.value = localStorage.getItem('bio_' + name) || "";
-        actions.innerHTML = `<button onclick="saveProfile()">Сохранить</button>`;
-    } else {
-        bioEdit.style.display = "none";
-        bioText.style.display = "block";
-        bioText.innerText = localStorage.getItem('bio_' + name) || "О себе ничего не указано";
-        actions.innerHTML = `
-            <button class="btn-action" onclick="startChat('${name}')">Написать</button>
-            <button class="btn-call" onclick="alert('Звонок ${name}...')">Позвонить</button>
-        `;
-    }
-}
-
-function saveProfile() {
-    let bio = document.getElementById('p-bio-edit').value;
-    localStorage.setItem('bio_' + currentUser, bio);
-    closeModal('profile-modal');
-}
-
-function startChat(name) {
-    let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
-    if (!contacts.includes(name)) {
-        contacts.push(name);
-        localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
-    }
-    closeModal('profile-modal');
-    selectChat(name);
-}
-
-// КАНАЛЫ
-function openChannelCreator() { document.getElementById('channel-modal').style.display = 'flex'; }
-
-function createChannel() {
-    let name = document.getElementById('chan-name').value.trim();
-    let link = document.getElementById('chan-link').value.trim().replace('@', '');
-    
-    if (name && link) {
-        let channels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-        channels.push({ name, link, owner: currentUser });
-        localStorage.setItem('channels_' + currentUser, JSON.stringify(channels));
-        closeModal('channel-modal');
-        renderContacts();
-    }
+function selectChat(name) {
+    activeChat = name;
+    document.getElementById('current-chat-title').innerText = "Чат с " + name;
+    document.getElementById('inputPanel').style.display = 'flex';
+    db.ref('chats/').off(); 
+    listenMessages(getChatKey(currentUser, activeChat));
 }
 
 function renderContacts() {
     let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = "";
-    
-    // 1. Заметки
-    listDiv.innerHTML += `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Мои заметки</div>`;
-
-    // 2. Каналы
-    let channels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-    channels.forEach(c => {
-        listDiv.innerHTML += `
-            <div class="chat-item channel ${activeChat === c.link ? 'active' : ''}" onclick="selectChat('${c.link}', true)">
-                <img class="chat-avatar" src="https://api.dicebear.com/7.x/identicon/svg?seed=${c.link}">
-                <span>${c.name}</span>
-            </div>`;
-    });
-
-    // 3. Контакты
+    listDiv.innerHTML = `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Мои заметки</div>`;
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     contacts.forEach(name => {
         listDiv.innerHTML += `
-            <div class="chat-item ${activeChat === name ? 'active' : ''}" onclick="selectChat('${name}')">
+            <div class="chat-item" onclick="selectChat('${name}')">
                 <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
                 <span>${name}</span>
             </div>`;
     });
 }
 
-function selectChat(id, isChannel = false) {
-    activeChat = id;
-    let channels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-    let chanObj = channels.find(c => c.link === id);
-    
-    document.getElementById('current-chat-title').innerText = chanObj ? "📢 " + chanObj.name : "Чат с " + id;
-    
-    // В канале может писать только владелец (в нашей версии)
-    document.getElementById('inputPanel').style.display = 'flex'; 
-    renderContacts();
-    renderMessages();
+// Поиск (упрощенный для теста базы)
+function searchProfile() {
+    let query = document.getElementById('searchUser').value.trim().replace('@', '');
+    if (query && query !== currentUser) {
+        let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
+        if (!contacts.includes(query)) contacts.push(query);
+        localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
+        renderContacts();
+        selectChat(query);
+    }
 }
-
-function send() {
-    let input = document.getElementById('msgInput');
-    if (!input.value.trim() || !activeChat) return;
-
-    let now = new Date();
-    let time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-    let chatKey = (activeChat === 'Заметки') ? 'notes_' + currentUser : [currentUser, activeChat].sort().join('_');
-    
-    // Если это канал, ключ просто по юзернейму канала
-    let channels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-    if (channels.some(c => c.link === activeChat)) chatKey = 'chan_' + activeChat;
-
-    let history = JSON.parse(localStorage.getItem('chat_' + chatKey) || "[]");
-    history.push({ from: currentUser, text: input.value, time: time });
-    localStorage.setItem('chat_' + chatKey, JSON.stringify(history));
-    
-    input.value = '';
-    renderMessages();
-}
-
-function renderMessages() {
-    if (!activeChat) return;
-    let chatKey = (activeChat === 'Заметки') ? 'notes_' + currentUser : [currentUser, activeChat].sort().join('_');
-    let channels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
-    if (channels.some(c => c.link === activeChat)) chatKey = 'chan_' + activeChat;
-
-    let history = JSON.parse(localStorage.getItem('chat_' + chatKey) || "[]");
-    let messagesDiv = document.getElementById('messages');
-    messagesDiv.innerHTML = "";
-    
-    history.forEach(msg => {
-        let isOwn = msg.from === currentUser;
-        messagesDiv.innerHTML += `
-            <div class="msg ${isOwn ? 'own' : 'others'}">
-                <span class="msg-author">${msg.from}</span>
-                <span class="msg-text">${msg.text}</span>
-                <span class="msg-time">${msg.time}</span>
-            </div>`;
-    });
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
