@@ -17,32 +17,47 @@
 
     <div id="profile-modal" class="modal" style="display: none;">
         <div class="auth-box profile-card">
-            <span class="close-btn" onclick="closeProfile()">&times;</span>
+            <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
             <img id="p-avatar" src="" alt="avatar">
             <h2 id="p-name"></h2>
             <p id="p-username"></p>
-            <textarea id="p-bio" placeholder="Расскажите о себе..."></textarea>
-            <button onclick="saveProfile()">Сохранить</button>
+            <p id="p-bio-text" style="font-size: 0.9em; color: #ccc; margin: 10px 0;"></p>
+            <textarea id="p-bio-edit" style="display:none;"></textarea>
+            
+            <div id="profile-actions">
+                </div>
+        </div>
+    </div>
+
+    <div id="channel-modal" class="modal" style="display: none;">
+        <div class="auth-box">
+            <span class="close-btn" onclick="closeModal('channel-modal')">&times;</span>
+            <h3>Создать канал</h3>
+            <input type="text" id="chan-name" placeholder="Название канала...">
+            <input type="text" id="chan-link" placeholder="Юзернейм канала (напр. news)...">
+            <button onclick="createChannel()">Создать</button>
         </div>
     </div>
 
     <div class="app-container">
         <aside class="sidebar">
-            <div class="profile-header" onclick="openProfile()" style="cursor: pointer;">
-                <img id="user-avatar" src="" alt="ava">
-                <div class="user-info">
-                    <strong id="display-name"></strong>
-                    <div class="status-online">Online</div>
+            <div class="sidebar-header">
+                <div class="profile-header" onclick="openMyProfile()">
+                    <img id="user-avatar" src="" alt="ava">
+                    <div class="user-info">
+                        <strong id="display-name"></strong>
+                        <div class="status-online">Online</div>
+                    </div>
                 </div>
+                <div class="settings-icon" onclick="openChannelCreator()">⚙️</div>
             </div>
             
             <div class="search-box">
-                <input type="text" id="searchUser" placeholder="Ник собеседника...">
-                <button onclick="addContact()">+</button>
+                <input type="text" id="searchUser" placeholder="Поиск @юзернейм...">
+                <button onclick="searchProfile()">🔍</button>
             </div>
 
-            <div id="chat-list" class="chat-list">
-                </div>
+            <div id="chat-list" class="chat-list"></div>
         </aside>
 
         <main class="main-chat">

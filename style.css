@@ -71,4 +71,15 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
-}
+}.sidebar-header { display: flex; align-items: center; justify-content: space-between; padding-right: 15px; border-bottom: 1px solid #24243e; }
+.settings-icon { font-size: 20px; cursor: pointer; transition: 0.3s; opacity: 0.7; }
+.settings-icon:hover { transform: rotate(90deg); opacity: 1; }
+
+.btn-action { background: #4ade80 !important; margin-top: 10px; }
+.btn-call { background: #0088cc !important; margin-top: 5px; }
+
+/* Канал в списке */
+.chat-item.channel { border-left: 4px solid #a29bfe; }
+.chat-item.channel::after { content: "канал"; font-size: 9px; background: #a29bfe; color: #1a1a2e; padding: 2px 5px; border-radius: 4px; margin-left: auto; }
+
+#p-bio-text { white-space: pre-wrap; }
