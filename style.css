@@ -1,12 +1,166 @@
-/* Кнопка бургера */
+/* ОБЩИЕ СТИЛИ */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0e0e0e;
+    color: white;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* БОКОВАЯ ПАНЕЛЬ (СПИСОК ЧАТОВ) */
+.sidebar {
+    width: 350px;
+    background-color: #1c1c1c;
+    border-right: 1px solid #2b2b2b;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #242424;
+}
+
+.sidebar-header input {
+    flex: 1;
+    background: #121212;
+    border: 1px solid #333;
+    padding: 8px 12px;
+    border-radius: 20px;
+    color: white;
+    outline: none;
+}
+
+/* СПИСОК ЧАТОВ */
+.chat-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    border-bottom: 1px solid #252525;
+}
+
+.chat-item:hover {
+    background-color: #2b2b2b;
+}
+
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    background: #333;
+}
+
+/* ОКНО ЧАТА */
+.chat-window {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); /* Фон как в ТГ */
+    background-size: cover;
+}
+
+.chat-header {
+    padding: 15px 25px;
+    background: #242424;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+}
+
+/* СООБЩЕНИЯ */
+.messages-area {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.msg {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.msg.own {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #7b2ff7, #5d12d2);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.msg.others {
+    align-self: flex-start;
+    background: #2b2b2b;
+    color: #efefef;
+    border-bottom-left-radius: 4px;
+}
+
+.msg-time {
+    font-size: 11px;
+    opacity: 0.7;
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* ПАНЕЛЬ ВВОДА */
+.input-area {
+    padding: 15px;
+    background: #242424;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-area input {
+    flex: 1;
+    background: #1c1c1c;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    color: white;
+    outline: none;
+}
+
+.input-area button {
+    background: none;
+    border: none;
+    color: #7b2ff7;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* БОКОВОЕ МЕНЮ (Side Menu) */
 .menu-toggle {
     font-size: 22px;
     cursor: pointer;
-    padding: 10px;
     color: #888;
+    padding: 5px;
 }
 
-/* Боковое меню */
 .side-menu {
     position: fixed;
     top: 0;
@@ -16,7 +170,7 @@
     background: #1c1c1c;
     z-index: 1000;
     transition: 0.3s ease;
-    box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
 }
@@ -32,29 +186,27 @@
 }
 
 .large-avatar {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #7b2ff7;
 }
 
 .menu-username {
     color: white;
     font-weight: bold;
-}
-
-.menu-content {
-    padding: 10px 0;
+    font-size: 18px;
 }
 
 .menu-item {
-    padding: 12px 25px;
+    padding: 14px 25px;
     color: #eee;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 15px;
+    transition: 0.2s;
 }
 
 .menu-item:hover {
@@ -62,22 +214,49 @@
 }
 
 .badge {
-    background: #333;
-    color: #888;
+    background: #444;
+    color: #bbb;
     padding: 2px 8px;
     border-radius: 10px;
-    font-size: 12px;
+    font-size: 11px;
 }
-
-hr { border: 0; border-top: 1px solid #333; margin: 10px 0; }
 
 #menu-overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
     z-index: 999;
+}
+
+/* ЭКРАН ВХОДА */
+.auth-container {
+    position: fixed;
+    width: 100%; height: 100%;
+    background: #0e0e0e;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+}
+
+.auth-card {
+    background: #1c1c1c;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.auth-card input {
+    display: block; width: 250px;
+    padding: 12px; margin: 20px 0;
+    background: #121212; border: 1px solid #333;
+    border-radius: 10px; color: white;
+}
+
+.auth-card button {
+    width: 100%; padding: 12px;
+    background: #7b2ff7; border: none;
+    border-radius: 10px; color: white;
+    cursor: pointer; font-weight: bold;
 }
