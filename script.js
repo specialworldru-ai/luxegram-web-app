@@ -1,26 +1,43 @@
+// Проверка загрузки скрипта
+console.log("Luxegram Script Loaded");
+
 let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
 
-// При запуске
 window.onload = function() {
+    console.log("Window loaded, user:", currentUser);
+    const authScreen = document.getElementById('auth-screen');
+    
     if (currentUser) {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('display-name').innerText = "@" + currentUser;
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser}`;
+        if (authScreen) authScreen.style.display = 'none';
+        const displayName = document.getElementById('display-name');
+        const userAvatar = document.getElementById('user-avatar');
+        
+        if (displayName) displayName.innerText = "@" + currentUser;
+        if (userAvatar) userAvatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser}`;
         renderContacts();
     }
 };
 
-// Регистрация
 function register() {
-    let name = document.getElementById('reg-name').value.trim();
+    console.log("Register function called");
+    const nameInput = document.getElementById('reg-name');
+    if (!nameInput) {
+        console.error("Input reg-name not found!");
+        return;
+    }
+
+    let name = nameInput.value.trim();
     if (name) {
         localStorage.setItem('luxegram_user', name);
-        location.reload();
+        console.log("User saved:", name);
+        // Вместо сложной перезагрузки просто жестко обновляем адрес
+        window.location.href = window.location.href;
+    } else {
+        alert("Введите ник!");
     }
 }
 
-// Добавить контакт в список
 function addContact() {
     let contactName = document.getElementById('searchUser').value.trim();
     if (contactName && contactName !== currentUser) {
@@ -34,12 +51,12 @@ function addContact() {
     }
 }
 
-// Показать контакты слева
 function renderContacts() {
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = "";
+    if (!listDiv) return;
     
+    listDiv.innerHTML = "";
     contacts.forEach(name => {
         listDiv.innerHTML += `
             <div class="chat-item ${activeChat === name ? 'active' : ''}" onclick="selectChat('${name}')">
@@ -50,7 +67,6 @@ function renderContacts() {
     });
 }
 
-// Выбрать чат
 function selectChat(name) {
     activeChat = name;
     document.getElementById('current-chat-title').innerText = "Чат с " + name;
@@ -59,16 +75,13 @@ function selectChat(name) {
     renderMessages();
 }
 
-// Отправить сообщение
 function send() {
     let input = document.getElementById('msgInput');
     if (input.value.trim() && activeChat) {
         let now = new Date();
         let time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        
         let message = { from: currentUser, to: activeChat, text: input.value, time: time };
         
-        // Уникальный ключ для пары собеседников
         let chatKey = [currentUser, activeChat].sort().join('_');
         let history = JSON.parse(localStorage.getItem('chat_' + chatKey) || "[]");
         history.push(message);
@@ -79,7 +92,6 @@ function send() {
     }
 }
 
-// Показать сообщения в выбранном чате
 function renderMessages() {
     if (!activeChat) return;
     let chatKey = [currentUser, activeChat].sort().join('_');
@@ -99,8 +111,3 @@ function renderMessages() {
     });
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-
-// Отправка по нажатию Enter
-document.getElementById('msgInput').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') send();
-});
