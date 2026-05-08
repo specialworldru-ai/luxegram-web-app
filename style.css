@@ -1,43 +1,58 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; }
 
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a2e; display: flex; justify-content: center; align-items: center; z-index: 100; }
-.auth-box { background: #16213e; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 0 20px #6a0572; }
-.auth-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; outline: none; }
-.auth-box button { background: #6a0572; color: white; padding: 10px 30px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+body { 
+    font-family: 'Segoe UI', sans-serif; 
+    background: #0f0c29; 
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    display: flex; justify-content: center; align-items: center; 
+    height: 100vh; color: #fff; overflow: hidden;
+}
 
-.app-container { width: 1000px; height: 85vh; background: #0f3460; display: flex; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
+/* Модальное окно */
+.modal { position: fixed; inset: 0; background: #0f0c29; display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.auth-box { background: #16213e; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #6a0572; width: 320px; }
+.auth-box h2 { margin-bottom: 10px; color: #a29bfe; }
+.auth-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 8px; border: none; background: #1a1a2e; color: white; outline: none; }
+.auth-box button { background: #6a0572; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
 
-.sidebar { width: 300px; background: #16213e; border-right: 1px solid #1a1a2e; }
-.profile-section { padding: 20px; display: flex; align-items: center; gap: 15px; background: #1a1a2e; }
-#user-avatar { width: 45px; height: 45px; border-radius: 50%; background: #fff; }
+/* Контейнер приложения */
+.app-container { 
+    width: 95vw; max-width: 1100px; height: 90vh; 
+    background: #1a1a2e; display: flex; 
+    border-radius: 15px; overflow: hidden; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+}
 
-.chat-list .chat-item { padding: 15px 20px; cursor: pointer; transition: 0.3s; }
-.chat-item:hover { background: #6a0572; }
-.chat-item.active { background: #6a0572; font-weight: bold; }
+/* Сайдбар */
+.sidebar { width: 320px; background: #16213e; display: flex; flex-direction: column; border-right: 1px solid #24243e; }
+.profile-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #24243e; }
+#user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #6a0572; background: #fff; }
+.user-info strong { color: #a29bfe; font-size: 1.1em; }
+.status-online { color: #4ade80; font-size: 0.75em; }
 
-.main-chat { flex: 1; display: flex; flex-direction: column; background: #1a1a2e; }
-.chat-header { padding: 15px; background: #16213e; border-bottom: 1px solid #0f3460; }
+.search-box { padding: 15px; display: flex; gap: 10px; }
+.search-box input { flex: 1; background: #1a1a2e; border: none; padding: 10px; border-radius: 8px; color: white; }
+.search-box button { background: #6a0572; border: none; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; }
 
-.messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.msg { max-width: 70%; padding: 12px; border-radius: 15px; position: relative; }
-.msg.own { align-self: flex-end; background: #6a0572; color: white; }
-.msg.others { align-self: flex-start; background: #0f3460; color: white; }
-.msg-author { font-size: 0.75em; color: #a29bfe; margin-bottom: 4px; display: block; }
-.msg-time { font-size: 0.65em; opacity: 0.7; float: right; margin-top: 5px; margin-left: 10px; }
-
-.input-area { padding: 20px; background: #16213e; display: flex; gap: 10px; }
-#msgInput { flex: 1; background: #1a1a2e; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
-.input-area button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }/* Добавь к существующим стилям */
-.profile-header { padding: 20px; display: flex; align-items: center; gap: 12px; background: #1a1a2e; border-bottom: 1px solid #0f3460; }
-.user-info strong { display: block; color: #a29bfe; }
-.user-info small { color: #4ade80; font-size: 0.7em; }
-
-.search-box { padding: 15px; display: flex; gap: 5px; background: #16213e; }
-.search-box input { flex: 1; padding: 8px; border-radius: 5px; border: none; background: #1a1a2e; color: white; }
-.search-box button { background: #6a0572; border: none; color: white; padding: 0 12px; border-radius: 5px; cursor: pointer; }
-
-.chat-item { display: flex; align-items: center; gap: 10px; padding: 15px; border-bottom: 1px solid #1a1a2e; transition: 0.2s; }
+.chat-list { flex: 1; overflow-y: auto; }
+.chat-item { padding: 15px 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; border-bottom: 1px solid #1a1a2e; }
 .chat-item:hover { background: #1f1f3d; }
 .chat-item.active { background: #6a0572; }
-.chat-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; }
+
+/* Основной чат */
+.main-chat { flex: 1; display: flex; flex-direction: column; position: relative; }
+.chat-header { padding: 20px; background: #16213e; border-bottom: 1px solid #24243e; }
+
+.messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #1a1a2e; }
+
+/* Сообщения */
+.msg { max-width: 70%; padding: 10px 15px; border-radius: 12px; position: relative; }
+.msg.own { align-self: flex-end; background: #6a0572; color: #fff; border-bottom-right-radius: 2px; }
+.msg.others { align-self: flex-start; background: #24243e; color: #fff; border-bottom-left-radius: 2px; }
+.msg-author { font-size: 0.7em; color: #a29bfe; font-weight: bold; margin-bottom: 3px; display: block; }
+.msg-time { font-size: 0.6em; opacity: 0.7; display: block; text-align: right; margin-top: 5px; }
+
+.input-panel { padding: 20px; background: #16213e; display: flex; gap: 15px; }
+#msgInput { flex: 1; background: #1a1a2e; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
+.input-panel button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2em; }

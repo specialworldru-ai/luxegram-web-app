@@ -3,49 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxegram Pro</title>
+    <title>Luxegram Purple Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="auth-screen" class="modal">
         <div class="auth-box">
-            <h2>Luxegram Purple</h2>
-            <input type="text" id="reg-name" placeholder="Придумайте ник...">
-            <button onclick="register()">Создать профиль</button>
+            <h2>Luxegram</h2>
+            <p>Введите ваш ник для регистрации</p>
+            <input type="text" id="reg-name" placeholder="Ваш юзернейм...">
+            <button onclick="register()">Создать аккаунт</button>
         </div>
     </div>
 
     <div class="app-container">
-        <div class="sidebar">
+        <aside class="sidebar">
             <div class="profile-header">
                 <img id="user-avatar" src="" alt="ava">
                 <div class="user-info">
-                    <strong id="display-name"></strong>
-                    <small>Online</small>
+                    <strong id="display-name">Загрузка...</strong>
+                    <div class="status-online">Online</div>
                 </div>
             </div>
             
             <div class="search-box">
-                <input type="text" id="searchUser" placeholder="Поиск по юзернейму...">
+                <input type="text" id="searchUser" placeholder="Ник собеседника...">
                 <button onclick="addContact()">+</button>
             </div>
 
             <div id="chat-list" class="chat-list">
-                <!-- Сюда будут добавляться чаты -->
-            </div>
-        </div>
+                </div>
+        </aside>
 
-        <div class="main-chat">
+        <main class="main-chat">
             <div class="chat-header">
-                <h3 id="current-chat-title">Выберите чат</h3>
+                <h3 id="current-chat-title">Выберите чат слева</h3>
             </div>
-            <div id="messages" class="messages"></div>
-            <div class="input-area" id="inputPanel" style="display: none;">
-                <input type="text" id="msgInput" placeholder="Напишите сообщение...">
+            
+            <div id="messages" class="messages">
+                </div>
+
+            <div class="input-panel" id="inputPanel" style="display: none;">
+                <input type="text" id="msgInput" placeholder="Написать сообщение...">
                 <button onclick="send()">➤</button>
             </div>
-        </div>
+        </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

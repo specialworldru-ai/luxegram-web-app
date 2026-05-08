@@ -1,6 +1,7 @@
-llet currentUser = localStorage.getItem('luxegram_user') || "";
+let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
 
+// При запуске
 window.onload = function() {
     if (currentUser) {
         document.getElementById('auth-screen').style.display = 'none';
@@ -10,6 +11,7 @@ window.onload = function() {
     }
 };
 
+// Регистрация
 function register() {
     let name = document.getElementById('reg-name').value.trim();
     if (name) {
@@ -18,6 +20,7 @@ function register() {
     }
 }
 
+// Добавить контакт в список
 function addContact() {
     let contactName = document.getElementById('searchUser').value.trim();
     if (contactName && contactName !== currentUser) {
@@ -31,6 +34,7 @@ function addContact() {
     }
 }
 
+// Показать контакты слева
 function renderContacts() {
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     let listDiv = document.getElementById('chat-list');
@@ -46,6 +50,7 @@ function renderContacts() {
     });
 }
 
+// Выбрать чат
 function selectChat(name) {
     activeChat = name;
     document.getElementById('current-chat-title').innerText = "Чат с " + name;
@@ -54,6 +59,7 @@ function selectChat(name) {
     renderMessages();
 }
 
+// Отправить сообщение
 function send() {
     let input = document.getElementById('msgInput');
     if (input.value.trim() && activeChat) {
@@ -62,7 +68,7 @@ function send() {
         
         let message = { from: currentUser, to: activeChat, text: input.value, time: time };
         
-        // Ключ для хранения переписки именно с этим человеком
+        // Уникальный ключ для пары собеседников
         let chatKey = [currentUser, activeChat].sort().join('_');
         let history = JSON.parse(localStorage.getItem('chat_' + chatKey) || "[]");
         history.push(message);
@@ -73,6 +79,7 @@ function send() {
     }
 }
 
+// Показать сообщения в выбранном чате
 function renderMessages() {
     if (!activeChat) return;
     let chatKey = [currentUser, activeChat].sort().join('_');
@@ -93,4 +100,7 @@ function renderMessages() {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
-document.getElementById('msgInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') send() });
+// Отправка по нажатию Enter
+document.getElementById('msgInput').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') send();
+});
