@@ -1,8 +1,7 @@
-// В самом верху файла!
+// 1. КОНФИГУРАЦИЯ FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
   authDomain: "luxegram-f6e9a.firebaseapp.com",
-  // ТУТ ВАЖНО: Проверь эту ссылку в своей панели Realtime Database
   databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
   projectId: "luxegram-f6e9a",
   storageBucket: "luxegram-f6e9a.firebasestorage.app",
@@ -11,20 +10,14 @@ const firebaseConfig = {
   measurementId: "G-HXDSC0YVJV"
 };
 
-// Инициализация (Слова 'firebase' должны работать, т.к. мы добавили ссылки в HTML)
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// ... остальной твой код (currentUser и т.д.)
-};
-
-// 2. ИНИЦИАЛИЗАЦИЯ
+// ИНИЦИАЛИЗАЦИЯ
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
 
+// ЗАПУСК ПРИ ЗАГРУЗКЕ
 window.onload = function() {
     if (currentUser) {
         document.getElementById('auth-screen').style.display = 'none';
@@ -34,6 +27,7 @@ window.onload = function() {
     }
 };
 
+// РЕГИСТРАЦИЯ
 function register() {
     let name = document.getElementById('reg-name').value.trim().replace('@', '');
     if (name) {
@@ -42,7 +36,7 @@ function register() {
     }
 }
 
-// ОТПРАВКА СООБЩЕНИЯ
+// ОТПРАВКА
 function send() {
     let input = document.getElementById('msgInput');
     let text = input.value.trim();
@@ -61,7 +55,7 @@ function send() {
     input.value = '';
 }
 
-// СЛУШАТЕЛЬ (ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ)
+// СЛУШАТЕЛЬ БАЗЫ
 function listenMessages(chatKey) {
     db.ref('chats/' + chatKey).on('value', (snapshot) => {
         let messagesDiv = document.getElementById('messages');
@@ -87,7 +81,7 @@ function listenMessages(chatKey) {
     });
 }
 
-// УДАЛЕНИЕ СООБЩЕНИЯ
+// УДАЛЕНИЕ
 function deleteMsg(msgFirebaseId) {
     if (confirm("Удалить сообщение для всех?")) {
         let chatKey = getChatKey(currentUser, activeChat);
@@ -95,12 +89,13 @@ function deleteMsg(msgFirebaseId) {
     }
 }
 
-// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// КЛЮЧ ЧАТА
 function getChatKey(user1, user2) {
     if (user2 === 'Заметки') return 'notes_' + user1;
     return 'private_' + [user1, user2].sort().join('_');
 }
 
+// ВЫБОР ЧАТА
 function selectChat(name) {
     activeChat = name;
     document.getElementById('current-chat-title').innerText = "Чат с " + name;
@@ -109,6 +104,7 @@ function selectChat(name) {
     listenMessages(getChatKey(currentUser, activeChat));
 }
 
+// СПИСОК КОНТАКТОВ
 function renderContacts() {
     let listDiv = document.getElementById('chat-list');
     listDiv.innerHTML = `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Мои заметки</div>`;
@@ -122,7 +118,7 @@ function renderContacts() {
     });
 }
 
-// Поиск (упрощенный для теста базы)
+// ПОИСК
 function searchProfile() {
     let query = document.getElementById('searchUser').value.trim().replace('@', '');
     if (query && query !== currentUser) {
