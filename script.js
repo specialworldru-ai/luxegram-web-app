@@ -1,13 +1,21 @@
-// 1. КОНФИГУРАЦИЯ FIREBASE (Твои данные уже тут)
+// В самом верху файла!
 const firebaseConfig = {
   apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
   authDomain: "luxegram-f6e9a.firebaseapp.com",
+  // ТУТ ВАЖНО: Проверь эту ссылку в своей панели Realtime Database
   databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
   projectId: "luxegram-f6e9a",
   storageBucket: "luxegram-f6e9a.firebasestorage.app",
   messagingSenderId: "64533495549",
   appId: "1:64533495549:web:8f60c9243ca771204b4894",
   measurementId: "G-HXDSC0YVJV"
+};
+
+// Инициализация (Слова 'firebase' должны работать, т.к. мы добавили ссылки в HTML)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ... остальной твой код (currentUser и т.д.)
 };
 
 // 2. ИНИЦИАЛИЗАЦИЯ
