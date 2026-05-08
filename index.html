@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxegram</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="chat"><div id="messages"></div></div>
-    <input type="text" id="msgInput" placeholder="Пиши тут...">
-    <button onclick="send()">Отправить</button>
+    <div class="app-container">
+        <!-- Боковая панель с чатами -->
+        <div class="sidebar">
+            <div class="profile-section">
+                <input type="text" id="userName" placeholder="Ваш ник..." value="User">
+            </div>
+            <div class="chat-list">
+                <div class="chat-item active">💬 Общий чат</div>
+                <div class="chat-item">🤖 Бот (демо)</div>
+            </div>
+        </div>
+
+        <!-- Основное окно чата -->
+        <div class="main-chat">
+            <div id="messages" class="messages"></div>
+            <div class="input-area">
+                <input type="text" id="msgInput" placeholder="Напишите сообщение...">
+                <button onclick="send()">➤</button>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
