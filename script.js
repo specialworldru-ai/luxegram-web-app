@@ -96,7 +96,7 @@ function renderContacts() {
     let listDiv = document.getElementById('chat-list');
     listDiv.innerHTML = ""; 
 
-    // Заметки
+    // 1. Saved Messages
     listDiv.innerHTML += `
         <div class="chat-item special" onclick="selectChat('Заметки')">
             <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#7b2ff7; color:white; font-size:20px;">🔖</div>
@@ -106,7 +106,7 @@ function renderContacts() {
             </div>
         </div>`;
 
-    // Каналы
+    // 2. Твои КАНАЛЫ
     const channels = [
         { name: "LuxeNews", icon: "💎", color: "#f39c12" },
         { name: "CryptoWorld", icon: "₿", color: "#2ecc71" }
@@ -123,55 +123,43 @@ function renderContacts() {
             </div>`;
     });
 
-    // Контакты из поиска
+    // 3. Контакты (Чистим News здесь)
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     const channelNames = channels.map(c => c.name);
 
+    // Удаляем 'news' или 'LuxeNews' из массива контактов, если они там завалялись
+    contacts = contacts.filter(name => name.toLowerCase() !== 'news' && !channelNames.includes(name));
+    localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
+
     contacts.forEach(name => {
-        if (!channelNames.includes(name)) {
-            listDiv.innerHTML += `
-                <div class="chat-item" onclick="selectChat('${name}')">
-                    <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
-                    <div class="chat-info">
-                        <span class="chat-name">${name}</span>
-                        <p class="chat-last-msg">написать сообщение...</p>
-                    </div>
-                </div>`;
-        }
-    });
-}
-
-// ЭТА ФУНКЦИЯ ОСТАВЛЯЕТ ТВОИ КРУТЫЕ ОБЛАЧКА СООБЩЕНИЙ
-function listenMessages(chatKey) {
-    db.ref('chats/' + chatKey).on('value', (snapshot) => {
-        let messagesDiv = document.getElementById('messages');
-        messagesDiv.innerHTML = "";
-        let data = snapshot.val();
-        for (let id in data) {
-            let msg = data[id];
-            let isOwn = msg.from === currentUser;
-            
-            // Если это канал, добавляем "комменты"
-            let commentBtn = chatKey.startsWith("channel_") 
-                ? `<div class="comment-link" onclick="openComments('${chatKey}', '${id}')">💬 12 комментариев</div>` 
-                : "";
-
-            messagesDiv.innerHTML += `
-                <div class="msg ${isOwn ? 'own' : 'others'}">
-                    <div class="msg-content">${msg.text}</div>
-                    ${commentBtn}
-                    <span class="msg-time">${msg.time}</span>
-                </div>`;
-        }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        listDiv.innerHTML += `
+            <div class="chat-item" onclick="selectChat('${name}')">
+                <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
+                <div class="chat-info">
+                    <span class="chat-name">${name}</span>
+                    <p class="chat-last-msg">написать сообщение...</p>
+                </div>
+            </div>`;
     });
 }
 
 function selectChannel(name) {
     activeChat = name;
     document.getElementById('current-chat-title').innerText = "📢 " + name;
-    // Писать может только админ (можешь поставить свой ник вместо "admin")
-    document.getElementById('inputPanel').style.display = (currentUser === "admin") ? "flex" : "none";
+    
+    // РАЗРЕШАЕМ ПИСАТЬ ВСЕМ (пока ты тестируешь)
+    document.getElementById('inputPanel').style.display = "flex"; 
+    
+    db.ref('chats/').off();
+    listenMessages("channel_" + name);
+}
+
+function selectChannel(name) {
+    activeChat = name;
+    document.getElementById('current-chat-title').innerText = "📢 " + name;
+    
+    // РАЗРЕШАЕМ ПИСАТЬ ВСЕМ (пока ты тестируешь)
+    document.getElementById('inputPanel').style.display = "flex"; 
     
     db.ref('chats/').off();
     listenMessages("channel_" + name);
