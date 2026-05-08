@@ -2,6 +2,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
   authDomain: "luxegram-f6e9a.firebaseapp.com",
+  // https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/:
   databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
   projectId: "luxegram-f6e9a",
   storageBucket: "luxegram-f6e9a.firebasestorage.app",
