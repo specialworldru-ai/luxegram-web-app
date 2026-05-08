@@ -3,37 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxegram Purple</title>
+    <title>Luxegram Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Экран регистрации (скрывается после входа) -->
     <div id="auth-screen" class="modal">
         <div class="auth-box">
-            <h2>Добро пожаловать</h2>
-            <input type="text" id="reg-name" placeholder="Введите ваш ник...">
-            <button onclick="register()">Войти в чат</button>
+            <h2>Luxegram Purple</h2>
+            <input type="text" id="reg-name" placeholder="Придумайте ник...">
+            <button onclick="register()">Создать профиль</button>
         </div>
     </div>
 
     <div class="app-container">
         <div class="sidebar">
-            <div class="profile-section">
-                <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=User" alt="avatar">
-                <span id="display-name">User</span>
+            <div class="profile-header">
+                <img id="user-avatar" src="" alt="ava">
+                <div class="user-info">
+                    <strong id="display-name"></strong>
+                    <small>Online</small>
+                </div>
             </div>
-            <div class="chat-list">
-                <div class="chat-item active" onclick="switchChat('Общий чат')">🟣 Общий чат</div>
-                <div class="chat-item" onclick="switchChat('Архив')">📦 Архив</div>
+            
+            <div class="search-box">
+                <input type="text" id="searchUser" placeholder="Поиск по юзернейму...">
+                <button onclick="addContact()">+</button>
+            </div>
+
+            <div id="chat-list" class="chat-list">
+                <!-- Сюда будут добавляться чаты -->
             </div>
         </div>
 
         <div class="main-chat">
             <div class="chat-header">
-                <h3 id="current-chat-title">Общий чат</h3>
+                <h3 id="current-chat-title">Выберите чат</h3>
             </div>
             <div id="messages" class="messages"></div>
-            <div class="input-area">
+            <div class="input-area" id="inputPanel" style="display: none;">
                 <input type="text" id="msgInput" placeholder="Напишите сообщение...">
                 <button onclick="send()">➤</button>
             </div>

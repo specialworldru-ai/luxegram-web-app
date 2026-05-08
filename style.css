@@ -28,4 +28,16 @@ body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; display: flex; 
 
 .input-area { padding: 20px; background: #16213e; display: flex; gap: 10px; }
 #msgInput { flex: 1; background: #1a1a2e; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
-.input-area button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+.input-area button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }/* Добавь к существующим стилям */
+.profile-header { padding: 20px; display: flex; align-items: center; gap: 12px; background: #1a1a2e; border-bottom: 1px solid #0f3460; }
+.user-info strong { display: block; color: #a29bfe; }
+.user-info small { color: #4ade80; font-size: 0.7em; }
+
+.search-box { padding: 15px; display: flex; gap: 5px; background: #16213e; }
+.search-box input { flex: 1; padding: 8px; border-radius: 5px; border: none; background: #1a1a2e; color: white; }
+.search-box button { background: #6a0572; border: none; color: white; padding: 0 12px; border-radius: 5px; cursor: pointer; }
+
+.chat-item { display: flex; align-items: center; gap: 10px; padding: 15px; border-bottom: 1px solid #1a1a2e; transition: 0.2s; }
+.chat-item:hover { background: #1f1f3d; }
+.chat-item.active { background: #6a0572; }
+.chat-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; }
