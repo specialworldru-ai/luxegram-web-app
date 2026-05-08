@@ -94,14 +94,44 @@ function getChatKey(user1, user2) {
 
 function renderContacts() {
     let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Избранное (Заметки)</div>`;
+    listDiv.innerHTML = ""; // Очищаем
+
+    // 1. Сначала всегда идут "Заметки" (Saved Messages)
+    listDiv.innerHTML += `
+        <div class="chat-item special" onclick="selectChat('Заметки')">
+            <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#7b2ff7; color:white; font-size:20px;">🔖</div>
+            <div class="chat-info">
+                <span class="chat-name">Saved Messages</span>
+                <p class="chat-last-msg">Личные заметки</p>
+            </div>
+        </div>`;
+
+    // 2. Затем твои любимые КАНАЛЫ (добавляем их вручную)
+    const channels = ["LuxeNews", "CryptoWorld"]; // Названия твоих каналов
+    channels.forEach(chan => {
+        listDiv.innerHTML += `
+            <div class="chat-item channel" onclick="selectChat('${chan}')">
+                <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#444; color:white; font-size:20px;">📢</div>
+                <div class="chat-info">
+                    <span class="chat-name">${chan}</span>
+                    <p class="chat-last-msg">канал</p>
+                </div>
+            </div>`;
+    });
+
+    // 3. А потом уже все остальные контакты из поиска
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     contacts.forEach(name => {
-        listDiv.innerHTML += `
-            <div class="chat-item" onclick="selectChat('${name}')">
-                <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
-                <span>${name}</span>
-            </div>`;
+        if (!channels.includes(name)) { // Чтобы не дублировать, если канал в контактах
+            listDiv.innerHTML += `
+                <div class="chat-item" onclick="selectChat('${name}')">
+                    <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
+                    <div class="chat-info">
+                        <span class="chat-name">${name}</span>
+                        <p class="chat-last-msg">написать сообщение...</p>
+                    </div>
+                </div>`;
+        }
     });
 }
 

@@ -296,4 +296,31 @@ body {
     background: #7b2ff7; border: none;
     border-radius: 10px; color: white;
     cursor: pointer; font-weight: bold;
+}/* Стили для текста внутри списка чатов */
+.chat-info {
+    display: flex;
+    flex-direction: column; /* Ставит имя и текст друг под другом */
+    justify-content: center;
+}
+
+.chat-name {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.chat-last-msg {
+    font-size: 13px;
+    color: #888888; /* Серый цвет для подписи */
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Если текст длинный, он обрежется троеточием */
+}
+
+/* Слегка подсветим "Заметки" */
+.chat-item.special {
+    background-color: rgba(123, 47, 247, 0.05);
+    border-left: 3px solid #7b2ff7; /* Фиолетовая полоска слева */
 }
