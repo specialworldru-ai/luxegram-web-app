@@ -18,13 +18,70 @@ function register() {
     }
 }
 
-// ПОИСК ПРОФИЛЯ
+// ПОИСК (Переработанный)
 function searchProfile() {
-    let target = document.getElementById('searchUser').value.trim().replace('@', '');
-    if (!target) return;
+    let query = document.getElementById('searchUser').value.trim().replace('@', '');
+    if (!query) return;
+
+    // 1. Проверяем, не твой ли это ник
+    if (query === currentUser) {
+        openProfile(currentUser, true);
+        return;
+    }
+
+    // 2. Ищем в списке созданных каналов
+    let allChannels = JSON.parse(localStorage.getItem('channels_' + currentUser) || "[]");
+    let foundChannel = allChannels.find(c => c.link === query);
+
+    if (foundChannel) {
+        // Если это канал — сразу открываем его
+        selectChat(foundChannel.link, true);
+        document.getElementById('searchUser').value = "";
+        return;
+    }
+
+    // 3. Ищем в списке контактов (людей)
+    let allContacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
+    let foundContact = allContacts.includes(query);
+
+    if (foundContact) {
+        openProfile(query, false);
+    } else {
+        // 4. Если ничего не нашли — выводим сообщение
+        alert("Пользователь или канал @" + query + " не найден");
+    }
+}
+
+// Улучшенная функция открытия профиля (только для людей)
+function openProfile(name, isMe) {
+    const modal = document.getElementById('profile-modal');
+    modal.style.display = 'flex';
     
-    // В реальности тут был бы запрос к БД. Имитируем:
-    openProfile(target, target === currentUser);
+    // Генерируем аватарку (для людей — bottts)
+    document.getElementById('p-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
+    document.getElementById('p-name').innerText = name;
+    document.getElementById('p-username').innerText = "@" + name;
+    
+    let actions = document.getElementById('profile-actions');
+    let bioEdit = document.getElementById('p-bio-edit');
+    let bioText = document.getElementById('p-bio-text');
+    
+    actions.innerHTML = "";
+    
+    if (isMe) {
+        bioEdit.style.display = "block";
+        bioText.style.display = "none";
+        bioEdit.value = localStorage.getItem('bio_' + name) || "";
+        actions.innerHTML = `<button onclick="saveProfile()">Сохранить</button>`;
+    } else {
+        bioEdit.style.display = "none";
+        bioText.style.display = "block";
+        bioText.innerText = localStorage.getItem('bio_' + name) || "Этот пользователь еще не заполнил профиль";
+        actions.innerHTML = `
+            <button class="btn-action" onclick="startChat('${name}')">Написать</button>
+            <button class="btn-call" onclick="alert('Звонок недоступен')">Позвонить</button>
+        `;
+    }
 }
 
 function openMyProfile() { openProfile(currentUser, true); }
