@@ -94,9 +94,9 @@ function getChatKey(user1, user2) {
 
 function renderContacts() {
     let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = ""; // Очищаем
+    listDiv.innerHTML = ""; 
 
-    // 1. Сначала всегда идут "Заметки" (Saved Messages)
+    // Заметки
     listDiv.innerHTML += `
         <div class="chat-item special" onclick="selectChat('Заметки')">
             <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#7b2ff7; color:white; font-size:20px;">🔖</div>
@@ -106,23 +106,29 @@ function renderContacts() {
             </div>
         </div>`;
 
-    // 2. Затем твои любимые КАНАЛЫ (добавляем их вручную)
-    const channels = ["LuxeNews", "CryptoWorld"]; // Названия твоих каналов
+    // Каналы
+    const channels = [
+        { name: "LuxeNews", icon: "💎", color: "#f39c12" },
+        { name: "CryptoWorld", icon: "₿", color: "#2ecc71" }
+    ]; 
+    
     channels.forEach(chan => {
         listDiv.innerHTML += `
-            <div class="chat-item channel" onclick="selectChat('${chan}')">
-                <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#444; color:white; font-size:20px;">📢</div>
+            <div class="chat-item channel" onclick="selectChannel('${chan.name}')">
+                <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:${chan.color}; color:white; font-size:20px;">${chan.icon}</div>
                 <div class="chat-info">
-                    <span class="chat-name">${chan}</span>
-                    <p class="chat-last-msg">канал</p>
+                    <span class="chat-name">${chan.name}</span>
+                    <p class="chat-last-msg">официальный канал</p>
                 </div>
             </div>`;
     });
 
-    // 3. А потом уже все остальные контакты из поиска
+    // Контакты из поиска
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
+    const channelNames = channels.map(c => c.name);
+
     contacts.forEach(name => {
-        if (!channels.includes(name)) { // Чтобы не дублировать, если канал в контактах
+        if (!channelNames.includes(name)) {
             listDiv.innerHTML += `
                 <div class="chat-item" onclick="selectChat('${name}')">
                     <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
@@ -133,6 +139,42 @@ function renderContacts() {
                 </div>`;
         }
     });
+}
+
+// ЭТА ФУНКЦИЯ ОСТАВЛЯЕТ ТВОИ КРУТЫЕ ОБЛАЧКА СООБЩЕНИЙ
+function listenMessages(chatKey) {
+    db.ref('chats/' + chatKey).on('value', (snapshot) => {
+        let messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = "";
+        let data = snapshot.val();
+        for (let id in data) {
+            let msg = data[id];
+            let isOwn = msg.from === currentUser;
+            
+            // Если это канал, добавляем "комменты"
+            let commentBtn = chatKey.startsWith("channel_") 
+                ? `<div class="comment-link" onclick="openComments('${chatKey}', '${id}')">💬 12 комментариев</div>` 
+                : "";
+
+            messagesDiv.innerHTML += `
+                <div class="msg ${isOwn ? 'own' : 'others'}">
+                    <div class="msg-content">${msg.text}</div>
+                    ${commentBtn}
+                    <span class="msg-time">${msg.time}</span>
+                </div>`;
+        }
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+}
+
+function selectChannel(name) {
+    activeChat = name;
+    document.getElementById('current-chat-title').innerText = "📢 " + name;
+    // Писать может только админ (можешь поставить свой ник вместо "admin")
+    document.getElementById('inputPanel').style.display = (currentUser === "admin") ? "flex" : "none";
+    
+    db.ref('chats/').off();
+    listenMessages("channel_" + name);
 }
 
 function searchProfile() {
