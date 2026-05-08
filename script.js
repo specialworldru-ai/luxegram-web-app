@@ -1,20 +1,19 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
-  authDomain: "luxegram-f6e9a.firebaseapp.com",
-  databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
-  projectId: "luxegram-f6e9a",
-  storageBucket: "luxegram-f6e9a.firebasestorage.app",
-  messagingSenderId: "64533495549",
-  appId: "1:64533495549:web:8f60c9243ca771204b4894",
-  measurementId: "G-HXDSC0YVJV"
+    apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
+    authDomain: "luxegram-f6e9a.firebaseapp.com",
+    databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
+    projectId: "luxegram-f6e9a",
+    storageBucket: "luxegram-f6e9a.firebasestorage.app",
+    messagingSenderId: "64533495549",
+    appId: "1:64533495549:web:8f60c9243ca771204b4894",
+    measurementId: "G-HXDSC0YVJV"
 };
 
-// Инициализация
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-
 let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
+let selectedMsg = null;
 
 window.onload = function() {
     if (currentUser) {
@@ -25,7 +24,6 @@ window.onload = function() {
     }
 };
 
-// Открыть/Закрыть меню
 function toggleMenu() {
     const menu = document.getElementById('side-menu');
     const overlay = document.getElementById('menu-overlay');
@@ -35,143 +33,106 @@ function toggleMenu() {
 
 function register() {
     let name = document.getElementById('reg-name').value.trim().replace('@', '');
-    if (name) {
-        localStorage.setItem('luxegram_user', name);
-        location.reload();
-    }
+    if (name) { localStorage.setItem('luxegram_user', name); location.reload(); }
 }
 
 function selectChat(name) {
     activeChat = name;
-    document.getElementById('current-chat-title').innerText = name === 'Заметки' ? "⭐ Избранное" : "Чат с " + name;
+    document.getElementById('current-chat-title').innerText = name === 'Заметки' ? "⭐ Saved Messages" : name;
     document.getElementById('inputPanel').style.display = 'flex';
-    
     if(document.getElementById('side-menu').classList.contains('active')) toggleMenu();
-
-    db.ref('chats/').off(); 
+    db.ref('chats/').off();
     listenMessages(getChatKey(currentUser, activeChat));
+}
+
+function selectChannel(name) {
+    activeChat = name;
+    document.getElementById('current-chat-title').innerText = "📢 " + name;
+    document.getElementById('inputPanel').style.display = 'flex'; // Всем разрешено писать для теста
+    if(document.getElementById('side-menu').classList.contains('active')) toggleMenu();
+    db.ref('chats/').off();
+    listenMessages("channel_" + name);
 }
 
 function send() {
     let input = document.getElementById('msgInput');
     let text = input.value.trim();
     if (!text || !activeChat) return;
-
-    let chatKey = getChatKey(currentUser, activeChat);
-    let msgData = {
+    let key = activeChat.startsWith("LuxeNews") || activeChat.startsWith("Crypto") ? "channel_" + activeChat : getChatKey(currentUser, activeChat);
+    db.ref('chats/' + key).push({
         from: currentUser,
         text: text,
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        type: 'text'
-    };
-
-    db.ref('chats/' + chatKey).push(msgData);
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+    });
     input.value = '';
 }
 
 function listenMessages(chatKey) {
     db.ref('chats/' + chatKey).on('value', (snapshot) => {
-        let messagesDiv = document.getElementById('messages');
-        messagesDiv.innerHTML = "";
+        let div = document.getElementById('messages');
+        div.innerHTML = "";
         let data = snapshot.val();
         for (let id in data) {
             let msg = data[id];
             let isOwn = msg.from === currentUser;
-            messagesDiv.innerHTML += `
-                <div class="msg ${isOwn ? 'own' : 'others'}">
+            let comment = chatKey.startsWith("channel_") ? `<div class="comment-link">💬 Обсудить</div>` : "";
+            div.innerHTML += `
+                <div class="msg ${isOwn ? 'own' : 'others'}" oncontextmenu="showContextMenu(event, '${chatKey}', '${id}', '${msg.text}')">
                     <div class="msg-content">${msg.text}</div>
+                    ${comment}
                     <span class="msg-time">${msg.time}</span>
                 </div>`;
         }
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        div.scrollTop = div.scrollHeight;
     });
 }
 
-function getChatKey(user1, user2) {
-    if (user2 === 'Заметки') return 'notes_' + user1;
-    return 'private_' + [user1, user2].sort().join('_');
+function showContextMenu(e, chatKey, msgId, text) {
+    e.preventDefault();
+    selectedMsg = { key: chatKey, id: msgId, text: text };
+    let menu = document.getElementById('msg-menu');
+    menu.style.display = 'block';
+    menu.style.top = e.pageY + 'px';
+    menu.style.left = e.pageX + 'px';
+}
+
+window.onclick = () => document.getElementById('msg-menu').style.display = 'none';
+
+function deleteMsg() { if(selectedMsg) db.ref('chats/' + selectedMsg.key + '/' + selectedMsg.id).remove(); }
+function editMsg() {
+    let t = prompt("Изменить:", selectedMsg.text);
+    if(t) db.ref('chats/' + selectedMsg.key + '/' + selectedMsg.id).update({text: t});
+}
+
+function getChatKey(u1, u2) {
+    if (u2 === 'Заметки') return 'notes_' + u1;
+    return 'private_' + [u1, u2].sort().join('_');
 }
 
 function renderContacts() {
-    let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = ""; 
-
-    // 1. Saved Messages
-    listDiv.innerHTML += `
-        <div class="chat-item special" onclick="selectChat('Заметки')">
-            <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:#7b2ff7; color:white; font-size:20px;">🔖</div>
-            <div class="chat-info">
-                <span class="chat-name">Saved Messages</span>
-                <p class="chat-last-msg">Личные заметки</p>
-            </div>
-        </div>`;
-
-    // 2. Твои КАНАЛЫ
-    const channels = [
-        { name: "LuxeNews", icon: "💎", color: "#f39c12" },
-        { name: "CryptoWorld", icon: "₿", color: "#2ecc71" }
-    ]; 
-    
-    channels.forEach(chan => {
-        listDiv.innerHTML += `
-            <div class="chat-item channel" onclick="selectChannel('${chan.name}')">
-                <div class="chat-avatar" style="display:flex; align-items:center; justify-content:center; background:${chan.color}; color:white; font-size:20px;">${chan.icon}</div>
-                <div class="chat-info">
-                    <span class="chat-name">${chan.name}</span>
-                    <p class="chat-last-msg">официальный канал</p>
-                </div>
-            </div>`;
+    let list = document.getElementById('chat-list');
+    list.innerHTML = "";
+    // Заметки
+    list.innerHTML += `<div class="chat-item" onclick="selectChat('Заметки')"><div class="chat-avatar" style="background:#7b2ff7; display:flex; align-items:center; justify-content:center;">🔖</div><div class="chat-info"><span class="chat-name">Saved Messages</span></div></div>`;
+    // Каналы
+    [{n:"LuxeNews",i:"💎",c:"#f39c12"},{n:"CryptoWorld",i:"₿",c:"#2ecc71"}].forEach(ch => {
+        list.innerHTML += `<div class="chat-item" onclick="selectChannel('${ch.n}')"><div class="chat-avatar" style="background:${ch.c}; display:flex; align-items:center; justify-content:center;">${ch.i}</div><div class="chat-info"><span class="chat-name">${ch.n}</span><p class="chat-last-msg">канал</p></div></div>`;
     });
-
-    // 3. Контакты (Чистим News здесь)
-    let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
-    const channelNames = channels.map(c => c.name);
-
-    // Удаляем 'news' или 'LuxeNews' из массива контактов, если они там завалялись
-    contacts = contacts.filter(name => name.toLowerCase() !== 'news' && !channelNames.includes(name));
+    // Удаление бага с "news"
+    let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]").filter(n => n.toLowerCase() !== 'news' && n !== 'LuxeNews');
     localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
-
-    contacts.forEach(name => {
-        listDiv.innerHTML += `
-            <div class="chat-item" onclick="selectChat('${name}')">
-                <img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
-                <div class="chat-info">
-                    <span class="chat-name">${name}</span>
-                    <p class="chat-last-msg">написать сообщение...</p>
-                </div>
-            </div>`;
+    contacts.forEach(n => {
+        list.innerHTML += `<div class="chat-item" onclick="selectChat('${n}')"><img class="chat-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${n}"><div class="chat-info"><span class="chat-name">${n}</span></div></div>`;
     });
-}
-
-function selectChannel(name) {
-    activeChat = name;
-    document.getElementById('current-chat-title').innerText = "📢 " + name;
-    
-    // РАЗРЕШАЕМ ПИСАТЬ ВСЕМ (пока ты тестируешь)
-    document.getElementById('inputPanel').style.display = "flex"; 
-    
-    db.ref('chats/').off();
-    listenMessages("channel_" + name);
-}
-
-function selectChannel(name) {
-    activeChat = name;
-    document.getElementById('current-chat-title').innerText = "📢 " + name;
-    
-    // РАЗРЕШАЕМ ПИСАТЬ ВСЕМ (пока ты тестируешь)
-    document.getElementById('inputPanel').style.display = "flex"; 
-    
-    db.ref('chats/').off();
-    listenMessages("channel_" + name);
 }
 
 function searchProfile() {
-    let query = document.getElementById('searchUser').value.trim().replace('@', '');
-    if (query && query !== currentUser) {
-        let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
-        if (!contacts.includes(query)) contacts.push(query);
-        localStorage.setItem('contacts_' + currentUser, JSON.stringify(contacts));
+    let q = document.getElementById('searchUser').value.trim();
+    if(q && q !== currentUser) {
+        let c = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
+        if(!c.includes(q)) c.push(q);
+        localStorage.setItem('contacts_' + currentUser, JSON.stringify(c));
         renderContacts();
-        selectChat(query);
+        selectChat(q);
     }
 }
