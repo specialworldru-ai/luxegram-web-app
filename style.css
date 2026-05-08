@@ -106,4 +106,41 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0e0e0e; colo
 .large-avatar { width: 65px; height: 65px; border-radius: 50%; margin: 20px; border: 2px solid #7b2ff7; }
 .menu-username { padding-left: 20px; font-weight: bold; }
 .auth-container { position: fixed; width: 100%; height: 100%; background: #0e0e0e; display: flex; justify-content: center; align-items: center; z-index: 2000; }
-.auth-card { background: #1c1c1c; padding: 40px; border-radius: 20px; text-align: center; }
+.auth-card { background: #1c1c1c; padding: 40px; border-radius: 20px; text-align: center; }/* КАСТОМНЫЙ СКРОЛЛБАР (ПОЛЗУНОК) */
+/* Настройка всей полосы скролла */
+::-webkit-scrollbar {
+    width: 6px; /* Тонкий */
+}
+
+/* Фон дорожки скролла (прозрачный, чтобы не выделялся) */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Сам ползунок */
+::-webkit-scrollbar-thumb {
+    background: #7b2ff7; /* Твой фиолетовый цвет */
+    border-radius: 10px;
+}
+
+/* Цвет ползунка при наведении */
+::-webkit-scrollbar-thumb:hover {
+    background: #5d12d2;
+}/* КОНТЕКСТНОЕ МЕНЮ (Фикс оформления) */
+.context-menu {
+    display: none;
+    position: fixed; /* Используем fixed для более точного позиционирования */
+    background: #242424;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 5000;
+    min-width: 170px;
+    padding: 6px 0;
+    animation: fadeIn 0.1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

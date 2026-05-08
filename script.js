@@ -98,10 +98,31 @@ function listenMessages(chatKey) {
 function showContextMenu(e, chatKey, msgId, text) {
     e.preventDefault();
     selectedMsg = { key: chatKey, id: msgId, text: text };
+    
     let menu = document.getElementById('msg-menu');
     menu.style.display = 'block';
-    menu.style.top = e.pageY + 'px';
-    menu.style.left = e.pageX + 'px';
+
+    // Размеры меню и экрана
+    let menuWidth = menu.offsetWidth;
+    let menuHeight = menu.offsetHeight;
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+
+    // Проверка правой границы
+    let x = e.pageX;
+    let y = e.pageY;
+
+    if ((x + menuWidth) > windowWidth) {
+        x = windowWidth - menuWidth - 10; // Отступаем 10px от края
+    }
+
+    // Проверка нижней границы
+    if ((y + menuHeight) > windowHeight) {
+        y = windowHeight - menuHeight - 10;
+    }
+
+    menu.style.top = y + 'px';
+    menu.style.left = x + 'px';
 }
 
 window.onclick = () => document.getElementById('msg-menu').style.display = 'none';
