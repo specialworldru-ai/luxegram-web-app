@@ -67,26 +67,50 @@ body {
     background: #333;
 }
 
-/* ОКНО ЧАТА - ПРИЯТНЫЙ ФОН */
+/* ОКНО ЧАТА - ПРОВЕРЕННЫЙ ФОН */
 .chat-window {
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* Глубокий темно-серый цвет, который не "давит" на глаза */
-    background-color: #0f1215; 
-    /* Добавляем легкую текстуру (крошечные точки), чтобы фон не казался плоским */
-    background-image: radial-gradient(#1a1d21 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-color: #111418; 
+    /* Текстура: маленькие серые точки */
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
     position: relative;
 }
 
-/* Добавим небольшое свечение сверху для объема (опционально) */
-.chat-window::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 100px;
-    background: linear-gradient(to bottom, rgba(123, 47, 247, 0.05), transparent);
-    pointer-events: none;
+/* АНИМАЦИЯ ПОЯВЛЕНИЯ СООБЩЕНИЙ */
+@keyframes msgPop {
+    0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.msg {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* ПОДКЛЮЧАЕМ АНИМАЦИЮ */
+    animation: msgPop 0.3s ease-out forwards;
+}
+
+.msg.own {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #7b2ff7, #5d12d2);
+    color: white;
+    border-bottom-right-radius: 4px;
+    transform-origin: right bottom; /* Чтобы вылетало из угла */
+}
+
+.msg.others {
+    align-self: flex-start;
+    background: #2b2b2b;
+    color: #efefef;
+    border-bottom-left-radius: 4px;
+    transform-origin: left bottom;
 }
 
 .chat-header {
