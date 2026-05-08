@@ -3,61 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxegram Pro</title>
+    <title>LuxeGram</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-    <div id="auth-screen" class="modal">
-        <div class="auth-box">
-            <h2>Luxegram</h2>
-            <input type="text" id="reg-name" placeholder="Ваш ник...">
+
+    <div id="auth-screen" class="auth-container">
+        <div class="auth-card">
+            <h1>LuxeGram</h1>
+            <input type="text" id="reg-name" placeholder="Введите ваш ник...">
             <button onclick="register()">Войти</button>
         </div>
     </div>
 
-    <div id="profile-modal" class="modal" style="display: none;">
-        <div class="auth-box profile-card">
-            <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
-            <img id="p-avatar" src="" alt="avatar">
-            <h2 id="p-name"></h2>
-            <p id="p-username"></p>
-            <textarea id="p-bio-edit" placeholder="Расскажите о себе..."></textarea>
-            <div id="profile-actions"></div>
-        </div>
-    </div>
-
     <div class="app-container">
-        <aside class="sidebar">
-            <div class="profile-header" onclick="openMyProfile()" style="cursor: pointer;">
-                <img id="user-avatar" src="" alt="ava">
-                <div class="user-info">
-                    <strong id="display-name"></strong>
-                    <div class="status-online">Online</div>
+        
+        <div id="side-menu" class="side-menu">
+            <div class="menu-header">
+                <img id="menu-avatar" class="large-avatar" src="">
+                <div id="menu-user-name" class="menu-username"></div>
+            </div>
+            <div class="menu-content">
+                <div class="menu-item" onclick="selectChat('Заметки')">🔖 Saved Messages</div>
+                <div class="menu-item">📁 Archived Chats <span class="badge">241</span></div>
+                <div class="menu-item">⏳ My Stories</div>
+                <div class="menu-item" onclick="toggleMenu()">👤 Contacts</div>
+                <hr>
+                <div class="menu-item">👛 Wallet</div>
+                <hr>
+                <div class="menu-item">⚙️ Settings</div>
+                <div class="menu-item">⋮ More</div>
+            </div>
+        </div>
+        <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+                <input type="text" id="searchUser" placeholder="Поиск..." onkeydown="if(event.key==='Enter') searchProfile()">
+            </div>
+            <div id="chat-list" class="chat-list">
                 </div>
-            </div>
-            
-            <div class="search-box">
-                <input type="text" id="searchUser" placeholder="Поиск @юзернейм...">
-                <button onclick="searchProfile()">🔍</button>
-            </div>
+        </div>
 
-            <div id="chat-list" class="chat-list"></div>
-        </aside>
-
-        <main class="main-chat">
+        <div class="chat-window">
             <div class="chat-header">
                 <h3 id="current-chat-title">Выберите чат</h3>
             </div>
-            <div id="messages" class="messages"></div>
-            <div class="input-panel" id="inputPanel" style="display: none;">
-                <input type="text" id="msgInput" placeholder="Сообщение...">
+            <div id="messages" class="messages-area">
+                </div>
+            <div class="input-area" id="inputPanel" style="display: none;">
+                <input type="text" id="msgInput" placeholder="Напишите сообщение..." onkeydown="if(event.key==='Enter') send()">
                 <button onclick="send()">➤</button>
             </div>
-        </main>
+        </div>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <script src="script.js"></script>
 </body>

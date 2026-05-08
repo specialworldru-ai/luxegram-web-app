@@ -1,8 +1,6 @@
-// 1. КОНФИГУРАЦИЯ FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
   authDomain: "luxegram-f6e9a.firebaseapp.com",
-  // https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/:
   databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app/", 
   projectId: "luxegram-f6e9a",
   storageBucket: "luxegram-f6e9a.firebasestorage.app",
@@ -11,24 +9,30 @@ const firebaseConfig = {
   measurementId: "G-HXDSC0YVJV"
 };
 
-// ИНИЦИАЛИЗАЦИЯ
+// Инициализация
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let currentUser = localStorage.getItem('luxegram_user') || "";
 let activeChat = "";
 
-// ЗАПУСК ПРИ ЗАГРУЗКЕ
 window.onload = function() {
     if (currentUser) {
         document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('display-name').innerText = "@" + currentUser;
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser}`;
+        document.getElementById('menu-user-name').innerText = "@" + currentUser;
+        document.getElementById('menu-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser}`;
         renderContacts();
     }
 };
 
-// РЕГИСТРАЦИЯ
+// Открыть/Закрыть меню
+function toggleMenu() {
+    const menu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    menu.classList.toggle('active');
+    overlay.style.display = menu.classList.contains('active') ? 'block' : 'none';
+}
+
 function register() {
     let name = document.getElementById('reg-name').value.trim().replace('@', '');
     if (name) {
@@ -37,7 +41,17 @@ function register() {
     }
 }
 
-// ОТПРАВКА
+function selectChat(name) {
+    activeChat = name;
+    document.getElementById('current-chat-title').innerText = name === 'Заметки' ? "⭐ Избранное" : "Чат с " + name;
+    document.getElementById('inputPanel').style.display = 'flex';
+    
+    if(document.getElementById('side-menu').classList.contains('active')) toggleMenu();
+
+    db.ref('chats/').off(); 
+    listenMessages(getChatKey(currentUser, activeChat));
+}
+
 function send() {
     let input = document.getElementById('msgInput');
     let text = input.value.trim();
@@ -45,70 +59,42 @@ function send() {
 
     let chatKey = getChatKey(currentUser, activeChat);
     let msgData = {
-        id: Date.now(),
         from: currentUser,
         text: text,
         time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        type: text.match(/\.(jpeg|jpg|gif|png)$/) ? 'image' : 'text'
+        type: 'text'
     };
 
     db.ref('chats/' + chatKey).push(msgData);
     input.value = '';
 }
 
-// СЛУШАТЕЛЬ БАЗЫ
 function listenMessages(chatKey) {
     db.ref('chats/' + chatKey).on('value', (snapshot) => {
         let messagesDiv = document.getElementById('messages');
         messagesDiv.innerHTML = "";
         let data = snapshot.val();
-        
         for (let id in data) {
             let msg = data[id];
             let isOwn = msg.from === currentUser;
-            let content = msg.type === 'image' 
-                ? `<img src="${msg.text}" style="max-width:200px; border-radius:10px;">` 
-                : msg.text;
-
             messagesDiv.innerHTML += `
                 <div class="msg ${isOwn ? 'own' : 'others'}">
-                    <span class="msg-author">${msg.from}</span>
-                    <div class="msg-content">${content}</div>
+                    <div class="msg-content">${msg.text}</div>
                     <span class="msg-time">${msg.time}</span>
-                    ${isOwn ? `<button class="del-btn" onclick="deleteMsg('${id}')">×</button>` : ''}
                 </div>`;
         }
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 }
 
-// УДАЛЕНИЕ
-function deleteMsg(msgFirebaseId) {
-    if (confirm("Удалить сообщение для всех?")) {
-        let chatKey = getChatKey(currentUser, activeChat);
-        db.ref('chats/' + chatKey + '/' + msgFirebaseId).remove();
-    }
-}
-
-// КЛЮЧ ЧАТА
 function getChatKey(user1, user2) {
     if (user2 === 'Заметки') return 'notes_' + user1;
     return 'private_' + [user1, user2].sort().join('_');
 }
 
-// ВЫБОР ЧАТА
-function selectChat(name) {
-    activeChat = name;
-    document.getElementById('current-chat-title').innerText = "Чат с " + name;
-    document.getElementById('inputPanel').style.display = 'flex';
-    db.ref('chats/').off(); 
-    listenMessages(getChatKey(currentUser, activeChat));
-}
-
-// СПИСОК КОНТАКТОВ
 function renderContacts() {
     let listDiv = document.getElementById('chat-list');
-    listDiv.innerHTML = `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Мои заметки</div>`;
+    listDiv.innerHTML = `<div class="chat-item special" onclick="selectChat('Заметки')">⭐ Избранное (Заметки)</div>`;
     let contacts = JSON.parse(localStorage.getItem('contacts_' + currentUser) || "[]");
     contacts.forEach(name => {
         listDiv.innerHTML += `
@@ -119,7 +105,6 @@ function renderContacts() {
     });
 }
 
-// ПОИСК
 function searchProfile() {
     let query = document.getElementById('searchUser').value.trim().replace('@', '');
     if (query && query !== currentUser) {
