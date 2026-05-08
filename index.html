@@ -3,24 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxegram</title>
+    <title>Luxegram Purple</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Экран регистрации (скрывается после входа) -->
+    <div id="auth-screen" class="modal">
+        <div class="auth-box">
+            <h2>Добро пожаловать</h2>
+            <input type="text" id="reg-name" placeholder="Введите ваш ник...">
+            <button onclick="register()">Войти в чат</button>
+        </div>
+    </div>
+
     <div class="app-container">
-        <!-- Боковая панель с чатами -->
         <div class="sidebar">
             <div class="profile-section">
-                <input type="text" id="userName" placeholder="Ваш ник..." value="User">
+                <img id="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=User" alt="avatar">
+                <span id="display-name">User</span>
             </div>
             <div class="chat-list">
-                <div class="chat-item active">💬 Общий чат</div>
-                <div class="chat-item">🤖 Бот (демо)</div>
+                <div class="chat-item active" onclick="switchChat('Общий чат')">🟣 Общий чат</div>
+                <div class="chat-item" onclick="switchChat('Архив')">📦 Архив</div>
             </div>
         </div>
 
-        <!-- Основное окно чата -->
         <div class="main-chat">
+            <div class="chat-header">
+                <h3 id="current-chat-title">Общий чат</h3>
+            </div>
             <div id="messages" class="messages"></div>
             <div class="input-area">
                 <input type="text" id="msgInput" placeholder="Напишите сообщение...">

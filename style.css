@@ -1,26 +1,31 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0088cc; display: flex; justify-content: center; align-items: center; height: 100vh; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: center; height: 100vh; color: #fff; }
 
-.app-container { width: 900px; height: 90vh; background: white; display: flex; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a2e; display: flex; justify-content: center; align-items: center; z-index: 100; }
+.auth-box { background: #16213e; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 0 20px #6a0572; }
+.auth-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; outline: none; }
+.auth-box button { background: #6a0572; color: white; padding: 10px 30px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
-/* Боковая панель */
-.sidebar { width: 30%; background: #ffffff; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
-.profile-section { padding: 20px; background: #f4f4f4; }
-#userName { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
-.chat-item { padding: 15px; cursor: pointer; border-bottom: 1px solid #eee; }
-.chat-item.active { background: #eff6ff; border-left: 4px solid #0088cc; }
+.app-container { width: 1000px; height: 85vh; background: #0f3460; display: flex; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
 
-/* Чат */
-.main-chat { width: 70%; display: flex; flex-direction: column; background: #e6ebee; }
-.messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.sidebar { width: 300px; background: #16213e; border-right: 1px solid #1a1a2e; }
+.profile-section { padding: 20px; display: flex; align-items: center; gap: 15px; background: #1a1a2e; }
+#user-avatar { width: 45px; height: 45px; border-radius: 50%; background: #fff; }
 
-.msg { max-width: 70%; padding: 10px; border-radius: 12px; position: relative; animation: fadeIn 0.3s; }
-.msg.own { align-self: flex-end; background: #effdde; }
-.msg-author { font-weight: bold; font-size: 0.8em; color: #555; margin-bottom: 4px; display: block; }
-.msg-time { font-size: 0.7em; color: #888; display: block; text-align: right; margin-top: 5px; }
+.chat-list .chat-item { padding: 15px 20px; cursor: pointer; transition: 0.3s; }
+.chat-item:hover { background: #6a0572; }
+.chat-item.active { background: #6a0572; font-weight: bold; }
 
-.input-area { padding: 15px; background: white; display: flex; gap: 10px; }
-#msgInput { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 50%; cursor: pointer; }
+.main-chat { flex: 1; display: flex; flex-direction: column; background: #1a1a2e; }
+.chat-header { padding: 15px; background: #16213e; border-bottom: 1px solid #0f3460; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.msg { max-width: 70%; padding: 12px; border-radius: 15px; position: relative; }
+.msg.own { align-self: flex-end; background: #6a0572; color: white; }
+.msg.others { align-self: flex-start; background: #0f3460; color: white; }
+.msg-author { font-size: 0.75em; color: #a29bfe; margin-bottom: 4px; display: block; }
+.msg-time { font-size: 0.65em; opacity: 0.7; float: right; margin-top: 5px; margin-left: 10px; }
+
+.input-area { padding: 20px; background: #16213e; display: flex; gap: 10px; }
+#msgInput { flex: 1; background: #1a1a2e; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
+.input-area button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
