@@ -6,13 +6,72 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0e0e0e; colo
 .sidebar-header { padding: 15px; display: flex; align-items: center; gap: 10px; background: #242424; }
 .sidebar-header input { flex: 1; background: #121212; border: 1px solid #333; padding: 8px 15px; border-radius: 20px; color: white; outline: none; }
 
-/* Список чатов */
-.chat-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #252525; gap: 15px; }
-.chat-item:hover { background: #2b2b2b; }
-.chat-avatar { width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0; }
-.chat-info { display: flex; flex-direction: column; overflow: hidden; }
-.chat-name { font-weight: bold; color: white; font-size: 15px; }
-.chat-last-msg { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ИСПРАВЛЕННЫЙ СПИСОК ЧАТОВ */
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Тонкая линия разделения */
+}
+
+.chat-avatar {
+    width: 52px; /* Чуть увеличили для солидности */
+    height: 52px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px; /* Для иконок 💎 и ₿ */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.chat-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0; /* Чтобы длинные имена не распирали панель */
+}
+
+.chat-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #ffffff;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-last-msg {
+    font-size: 13px;
+    color: #8a8a8a;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ */
+.chat-item:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* СТИЛЬ ДЛЯ "ЗАМЕТОК" */
+.chat-item.special {
+    background: rgba(123, 47, 247, 0.1);
+}
+
+/* ШРИФТ ДЛЯ СООБЩЕНИЙ */
+.msg-content {
+    word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.4;
+}
 
 /* Окно чата */
 .chat-window { flex: 1; display: flex; flex-direction: column; background-color: #111418; background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
