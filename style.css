@@ -8,12 +8,21 @@ body {
     height: 100vh; color: #fff; overflow: hidden;
 }
 
-/* Модальное окно */
-.modal { position: fixed; inset: 0; background: #0f0c29; display: flex; justify-content: center; align-items: center; z-index: 1000; }
-.auth-box { background: #16213e; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #6a0572; width: 320px; }
+/* Модальные окна (Вход и Профиль) */
+.modal { position: fixed; inset: 0; background: rgba(15, 12, 41, 0.95); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.auth-box { background: #16213e; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #6a0572; width: 350px; position: relative; }
 .auth-box h2 { margin-bottom: 10px; color: #a29bfe; }
-.auth-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 8px; border: none; background: #1a1a2e; color: white; outline: none; }
-.auth-box button { background: #6a0572; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
+.auth-box input, .auth-box textarea { 
+    width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; 
+    background: #1a1a2e; color: white; outline: none; border: 1px solid #24243e;
+}
+.auth-box button { background: #6a0572; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
+.auth-box button:hover { background: #8e0ba3; }
+
+/* Кнопка закрытия профиля */
+.close-btn { position: absolute; top: 10px; right: 15px; font-size: 25px; cursor: pointer; color: #a29bfe; }
+.profile-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #6a0572; margin-bottom: 15px; background: #fff; }
+.profile-card textarea { height: 80px; resize: none; }
 
 /* Контейнер приложения */
 .app-container { 
@@ -25,7 +34,8 @@ body {
 
 /* Сайдбар */
 .sidebar { width: 320px; background: #16213e; display: flex; flex-direction: column; border-right: 1px solid #24243e; }
-.profile-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #24243e; }
+.profile-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #24243e; transition: 0.2s; }
+.profile-header:hover { background: #1f1f3d; }
 #user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #6a0572; background: #fff; }
 .user-info strong { color: #a29bfe; font-size: 1.1em; }
 .status-online { color: #4ade80; font-size: 0.75em; }
@@ -38,6 +48,7 @@ body {
 .chat-item { padding: 15px 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; border-bottom: 1px solid #1a1a2e; }
 .chat-item:hover { background: #1f1f3d; }
 .chat-item.active { background: #6a0572; }
+.chat-item.special { border-left: 4px solid #4ade80; background: #1f1f3d; }
 .chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; }
 
 /* Основной чат */
@@ -47,7 +58,7 @@ body {
 .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #1a1a2e; }
 
 /* Сообщения */
-.msg { max-width: 70%; padding: 10px 15px; border-radius: 12px; position: relative; }
+.msg { max-width: 70%; padding: 10px 15px; border-radius: 12px; position: relative; animation: fadeIn 0.3s; }
 .msg.own { align-self: flex-end; background: #6a0572; color: #fff; border-bottom-right-radius: 2px; }
 .msg.others { align-self: flex-start; background: #24243e; color: #fff; border-bottom-left-radius: 2px; }
 .msg-author { font-size: 0.7em; color: #a29bfe; font-weight: bold; margin-bottom: 3px; display: block; }
@@ -56,3 +67,8 @@ body {
 .input-panel { padding: 20px; background: #16213e; display: flex; gap: 15px; }
 #msgInput { flex: 1; background: #1a1a2e; border: none; padding: 12px 20px; border-radius: 25px; color: white; outline: none; }
 .input-panel button { background: #6a0572; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2em; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

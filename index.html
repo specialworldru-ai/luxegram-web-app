@@ -3,25 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxegram Purple Pro</title>
+    <title>Luxegram Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="auth-screen" class="modal">
         <div class="auth-box">
             <h2>Luxegram</h2>
-            <p>Введите ваш ник для регистрации</p>
-            <input type="text" id="reg-name" placeholder="Ваш юзернейм...">
-            <button onclick="register()">Создать аккаунт</button>
+            <input type="text" id="reg-name" placeholder="Ваш ник...">
+            <button onclick="register()">Войти</button>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal" style="display: none;">
+        <div class="auth-box profile-card">
+            <span class="close-btn" onclick="closeProfile()">&times;</span>
+            <img id="p-avatar" src="" alt="avatar">
+            <h2 id="p-name"></h2>
+            <p id="p-username"></p>
+            <textarea id="p-bio" placeholder="Расскажите о себе..."></textarea>
+            <button onclick="saveProfile()">Сохранить</button>
         </div>
     </div>
 
     <div class="app-container">
         <aside class="sidebar">
-            <div class="profile-header">
+            <div class="profile-header" onclick="openProfile()" style="cursor: pointer;">
                 <img id="user-avatar" src="" alt="ava">
                 <div class="user-info">
-                    <strong id="display-name">Загрузка...</strong>
+                    <strong id="display-name"></strong>
                     <div class="status-online">Online</div>
                 </div>
             </div>
@@ -37,19 +47,15 @@
 
         <main class="main-chat">
             <div class="chat-header">
-                <h3 id="current-chat-title">Выберите чат слева</h3>
+                <h3 id="current-chat-title">Выберите чат</h3>
             </div>
-            
-            <div id="messages" class="messages">
-                </div>
-
+            <div id="messages" class="messages"></div>
             <div class="input-panel" id="inputPanel" style="display: none;">
-                <input type="text" id="msgInput" placeholder="Написать сообщение...">
+                <input type="text" id="msgInput" placeholder="Сообщение...">
                 <button onclick="send()">➤</button>
             </div>
         </main>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
