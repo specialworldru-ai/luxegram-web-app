@@ -89,9 +89,12 @@ function listenMessages(chatKey) {
             let msg = data[id];
             let isOwn = msg.from === currentUser;
             let comment = chatKey.startsWith("channel_") ? `<div class="comment-link" onclick="openComments('${chatKey}', '${id}')">💬 Обсудить</div>` : "";
-            div.innerHTML += `<div class="msg ${isOwn ? 'own' : 'others'}" oncontextmenu="showContextMenu(event, '${chatKey}', '${id}', '${msg.text}')">
-                <div class="msg-content">${msg.text}</div>${comment}<span class="msg-time">${msg.time}</span>
-            </div>`;
+          // Внутри функции listenMessages
+      div.innerHTML += `
+           <div class="msg ${isOwn ? 'own' : 'others'}">
+        <div class="msg-content">${msg.text}</div>
+        <span class="msg-time" style="font-size:10px; opacity:0.6; display:block; text-align:right;">${msg.time}</span>
+    </div>`;
         }
         div.scrollTop = div.scrollHeight;
     });
