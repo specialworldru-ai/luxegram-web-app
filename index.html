@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Full Firebase Edition</title>
+    <title>LuxeGram — Stable Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,7 +11,7 @@
     <audio id="notifySound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
 
     <div class="app-container">
-        <!-- ПРОФИЛЬ -->
+        <!-- ОКНО ПРОФИЛЯ -->
         <div id="userProfile" class="user-profile-overlay hidden">
             <div class="profile-card">
                 <div class="profile-header">
@@ -25,23 +25,14 @@
                     <div class="profile-status">в сети</div>
                 </div>
                 <div class="profile-info-list">
-                    <div class="info-item">
-                        <i class="fa-solid fa-phone"></i>
-                        <div><div class="info-val">+7 999 000-00-00</div><div class="info-label">Номер телефона</div></div>
-                    </div>
-                    <div class="info-item">
-                        <i class="fa-solid fa-at"></i>
-                        <div><div class="info-val">@luxeffa_dev</div><div class="info-label">Имя пользователя</div></div>
-                    </div>
-                    <div class="info-item">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <div><div class="info-val">Создаю лучший мессенджер!</div><div class="info-label">О себе</div></div>
-                    </div>
+                    <div class="info-item"><i class="fa-solid fa-phone"></i><div><div class="info-val">+7 999 000-00-00</div><div class="info-label">Номер телефона</div></div></div>
+                    <div class="info-item"><i class="fa-solid fa-at"></i><div><div class="info-val">@luxeffa_dev</div><div class="info-label">Имя пользователя</div></div></div>
+                    <div class="info-item"><i class="fa-solid fa-circle-info"></i><div><div class="info-val">Создаю лучший мессенджер!</div><div class="info-label">О себе</div></div></div>
                 </div>
             </div>
         </div>
 
-        <!-- МЕНЮ (ВСЕ ПУНКТЫ НА МЕСТЕ) -->
+        <!-- ЛЕВОЕ МЕНЮ (ЧЕРНАЯ ШАПКА ИЗ image_75f61c.png) -->
         <div id="sideMenu" class="side-menu">
             <div class="menu-content">
                 <div class="menu-header-dark" id="openProfileTrigger">
@@ -71,14 +62,14 @@
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Всё на месте!</div>
+                        <div class="last-message">Мессенджер готов!</div>
                     </div>
                 </div>
-                <div class="chat-item" data-id="durov" data-name="Павел Дуров">
-                    <div class="avatar" style="background: #e67e22;">ПД</div>
+                <div class="chat-item" data-id="main_chat" data-name="Общий чат">
+                    <div class="avatar" style="background: #8e44ad;">ОЧ</div>
                     <div class="chat-info">
-                        <div class="chat-name">Павел Дуров</div>
-                        <div class="last-message">Теперь идеально.</div>
+                        <div class="chat-name">Общий чат</div>
+                        <div class="last-message">Тут все юзеры</div>
                     </div>
                 </div>
             </div>
@@ -94,9 +85,8 @@
             </header>
             <div class="messages-container" id="messagesContainer"></div>
             
-            <!-- ПАНЕЛЬ ЭМОДЗИ -->
             <div id="emojiPicker" class="emoji-picker hidden">
-                <span>😊</span><span>😂</span><span>🔥</span><span>👍</span><span>❤️</span><span>😎</span><span>👏</span><span>🎉</span>
+                <span>😊</span><span>😂</span><span>🔥</span><span>👍</span><span>❤️</span><span>😎</span>
             </div>
 
             <footer class="chat-input-area">
