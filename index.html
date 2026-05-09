@@ -2,81 +2,86 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>LuxeGram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeGram — Telegram Style</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-<body class="dark-mode">
+<body class="tg-theme">
 
-    <div id="auth-screen" class="auth-full-screen">
-        <div class="auth-card">
+    <!-- Авторизация -->
+    <div id="auth-screen" class="auth-overlay">
+        <div class="auth-modal">
+            <div class="tg-logo"></div>
             <h1>LuxeGram</h1>
-            <input type="text" id="reg-nickname" placeholder="Ваше имя (Ник)..."><br><br>
-            <input type="text" id="reg-username" placeholder="Username (@user)..."><br><br>
-            <button onclick="register()">Войти</button>
+            <p>Введите данные для входа</p>
+            <input type="text" id="reg-nickname" placeholder="Имя">
+            <input type="text" id="reg-username" placeholder="@username">
+            <button onclick="register()">Начать общение</button>
         </div>
     </div>
 
-    <div id="side-menu" class="side-menu">
-        <div class="menu-header">
-            <img id="menu-avatar" style="width:60px; border-radius:50%;">
-            <div id="menu-nick" style="font-weight:bold; margin-top:10px;"></div>
-            <div id="menu-user" style="opacity:0.6; font-size:14px;"></div>
-        </div>
-        <hr>
-        <div class="menu-item" onclick="showFolder('all'); toggleMenu()">📱 Все чаты</div>
-        <div class="menu-item" onclick="showFolder('archive'); toggleMenu()">📦 Архив</div>
-        <div class="menu-item" onclick="openSettings(); toggleMenu()">⚙️ Настройки</div>
-    </div>
-    <div id="menu-overlay" onclick="toggleMenu()"></div>
-
-    <div class="app-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <span onclick="toggleMenu()" style="cursor:pointer; font-size:24px;">☰</span>
-                <input type="text" id="searchUser" placeholder="Поиск..." onkeydown="if(event.key==='Enter') searchProfile()">
+    <div class="tg-app">
+        <!-- Левая часть: Список чатов -->
+        <aside class="tg-left-column">
+            <div class="tg-search-area">
+                <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+                <div class="search-input-wrapper">
+                    <input type="text" id="userSearch" placeholder="Поиск" onkeydown="if(event.key==='Enter') searchProfile()">
+                </div>
             </div>
-            <div id="chat-list"></div>
-        </div>
+            
+            <div class="tg-chats-list" id="chat-list">
+                <!-- Сюда рендерятся чаты -->
+            </div>
+        </aside>
 
-        <div class="chat-window">
-            <div class="chat-header" id="chatHeader" onclick="showUserProfile(activeChat)">
-                <h3 id="current-chat-title">Выберите чат</h3>
+        <!-- Правая часть: Окно чата -->
+        <main class="tg-main-column">
+            <div id="empty-state" class="empty-chat">
+                <div class="empty-label">Выберите, кому хотели бы написать</div>
             </div>
-            <div id="messages" class="messages-area"></div>
-            <div class="input-panel" id="inputPanel" style="display:none;">
-                <input type="text" id="msgInput" placeholder="Написать..." onkeydown="if(event.key==='Enter') send()">
-                <button onclick="send()">➤</button>
-            </div>
-        </div>
 
-        <div id="user-profile-panel" class="right-panel">
-            <div class="profile-content">
-                <button onclick="closeRightPanel()">✕</button>
-                <img id="profile-img" class="profile-big-img">
-                <h2 id="profile-nick"></h2>
-                <p id="profile-user"></p>
+            <div id="active-chat-window" style="display: none;">
+                <header class="tg-chat-header" onclick="showUserProfile(activeChat)">
+                    <div class="header-avatar" id="header-avatar"></div>
+                    <div class="header-info">
+                        <div class="header-name" id="chat-title">Чат</div>
+                        <div class="header-status" id="chat-status">в сети</div>
+                    </div>
+                </header>
+
+                <div class="tg-messages-container" id="messages">
+                    <!-- Сообщения -->
+                </div>
+
+                <footer class="tg-input-area">
+                    <div class="input-wrapper">
+                        <input type="text" id="msgInput" placeholder="Сообщение" onkeydown="if(event.key==='Enter') send()">
+                        <button class="send-btn" onclick="send()">➤</button>
+                    </div>
+                </footer>
             </div>
-        </div>
+        </main>
     </div>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <h2>Настройки</h2>
-            <button onclick="toggleTheme()">Светлая/Темная тема</button><br><br>
-            <input type="text" id="edit-nick" placeholder="Новый Ник">
-            <button onclick="updateProfile('nick')">Ок</button><br><br>
-            <input type="text" id="edit-user" placeholder="Новый @user">
-            <button onclick="updateProfile('user')">Ок</button><br><br>
-            <button onclick="closeSettings()">Закрыть</button>
+    <!-- Боковое меню настроек -->
+    <div id="main-sidebar" class="tg-sidebar">
+        <div class="sidebar-header">
+            <div class="user-avatar" id="my-avatar"></div>
+            <div class="user-info">
+                <div id="my-nick">Имя</div>
+                <div id="my-user">@username</div>
+            </div>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-item" onclick="toggleTheme()">🌓 Сменить тему</div>
+            <div class="sidebar-item" onclick="openSettings()">⚙️ Настройки</div>
+            <div class="sidebar-item" onclick="showFolder('archive')">📦 Архив</div>
         </div>
     </div>
-
-    <div id="chat-context-menu" class="context-menu" style="display:none; position:fixed; background:#222; border:1px solid #444; z-index:5000;">
-        <div class="menu-item" id="pin-opt" onclick="togglePin()" style="padding:10px; cursor:pointer;">Закрепить</div>
-        <div class="menu-item" onclick="toggleArchive()" style="padding:10px; cursor:pointer;">В архив</div>
-    </div>
+    <div id="overlay" onclick="toggleSidebar()"></div>
 
     <script src="script.js"></script>
 </body>
