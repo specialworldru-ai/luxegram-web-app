@@ -3,80 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram - Discord Style</title>
+    <title>LuxeGram</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Иконки (по желанию) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Экран входа -->
-    <div id="auth-screen" class="ds-auth-wrapper">
-        <div class="ds-auth-box">
-            <h2>С возвращением!</h2>
-            <p>Мы так рады видеть тебя снова.</p>
-            <div class="input-group">
-                <label>ОТОБРАЖАЕМОЕ ИМЯ</label>
-                <input type="text" id="reg-nickname" placeholder="Твой никнейм">
-            </div>
-            <div class="input-group">
-                <label>ИМЯ ПОЛЬЗОВАТЕЛЯ</label>
-                <input type="text" id="reg-username" placeholder="Без символа @">
-            </div>
-            <button onclick="register()" class="ds-btn">Войти</button>
-        </div>
-    </div>
-
-    <!-- Основное приложение -->
-    <div class="ds-app">
-        <!-- Левый сайдбар -->
-        <aside class="ds-sidebar">
-            <div class="ds-sidebar-header">
-                <h3>Luxe Server</h3>
-            </div>
-            
-            <div class="ds-channel-list" id="chat-list">
-                <!-- Каналы генерируются тут -->
-            </div>
-
-            <!-- Панель профиля внизу слева -->
-            <div class="ds-user-panel">
-                <div class="ds-user-info">
-                    <img id="my-avatar" class="ds-avatar-small" src="">
-                    <div class="ds-user-text">
-                        <div id="my-nick" class="ds-nick">Имя</div>
-                        <div id="my-user" class="ds-tag">#tag</div>
+    <div class="app-container">
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <div class="menu-icon">☰</div>
+                <input type="text" placeholder="Поиск" class="search-input">
+            </header>
+            <div class="chats-list" id="chatsList">
+                <div class="chat-item active">
+                    <div class="avatar">L</div>
+                    <div class="chat-info">
+                        <div class="chat-name">LuxeGram Support</div>
+                        <div class="last-message">Добро пожаловать в LuxeGram!</div>
                     </div>
-                </div>
-                <div class="ds-user-controls">
-                    <span onclick="alert('Настройки в разработке!')" title="Настройки">⚙️</span>
                 </div>
             </div>
         </aside>
 
-        <!-- Основная зона чата -->
-        <main class="ds-main-chat">
-            <header class="ds-chat-header">
-                <span class="ds-hash">#</span>
-                <span id="chat-title" class="ds-chat-name">выберите-канал</span>
+        <!-- Окно чата -->
+        <main class="main-chat">
+            <header class="chat-header">
+                <div class="chat-title-container">
+                    <div class="chat-name">LuxeGram Support</div>
+                    <div class="chat-status">в сети</div>
+                </div>
+                <div class="header-icons">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </div>
             </header>
 
-            <div class="ds-messages" id="messages">
-                <div class="ds-welcome">
-                    <h1>Добро пожаловать!</h1>
-                    <p>Выбери канал слева, чтобы начать общение.</p>
+            <div class="messages-container" id="messagesContainer">
+                <div class="message incoming">
+                    <div class="message-content">
+                        Привет! Это твоя копия Telegram — LuxeGram. Начинай писать код!
+                        <span class="message-time">20:41</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="ds-input-area" id="input-area" style="display: none;">
-                <div class="ds-input-wrapper">
-                    <span class="ds-input-add">+</span>
-                    <input type="text" id="msgInput" placeholder="Написать..." onkeydown="if(event.key==='Enter') send()">
-                </div>
-            </div>
+            <footer class="chat-input-area">
+                <i class="fa-regular fa-paperclip"></i>
+                <input type="text" id="messageInput" placeholder="Напишите сообщение..." autocomplete="off">
+                <i class="fa-regular fa-face-smile"></i>
+                <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </footer>
         </main>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
