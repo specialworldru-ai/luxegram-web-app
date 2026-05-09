@@ -1,144 +1,60 @@
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0e0e0e; color: white; overflow: hidden; }
-.app-container { display: flex; height: 100vh; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; overflow: hidden; }
 
-/* Ползунок в цвет чата */
+/* Кастомный ползунок */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #7b2ff7; border-radius: 10px; }
 
-.sidebar { width: 350px; background: #1c1c1c; border-right: 1px solid #2b2b2b; display: flex; flex-direction: column; }
+/* Авторизация */
+.auth-full-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; display:flex; align-items:center; justify-content:center; }
+.auth-card { background:#111; padding:40px; border-radius:20px; border:1px solid #333; text-align:center; }
+.auth-card input { width:100%; padding:12px; margin:15px 0; background:#222; border:1px solid #444; color:#fff; border-radius:8px; }
+.auth-card button { width:100%; padding:12px; background:#7b2ff7; border:none; color:#fff; border-radius:8px; cursor:pointer; }
+
+/* Приложение */
+.app-container { display: flex; width: 100vw; height: 100vh; }
+.sidebar { width: 320px; background: #111; border-right: 1px solid #222; display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-header { padding: 15px; display: flex; align-items: center; gap: 10px; }
+.menu-toggle { font-size: 24px; cursor: pointer; color: #888; }
+.sidebar-header input { flex: 1; background: #222; border: none; padding: 8px 12px; border-radius: 8px; color: #fff; }
+
 .chat-list { flex: 1; overflow-y: auto; }
+.chat-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; gap: 12px; border-bottom: 1px solid #1a1a1a; position: relative; }
+.chat-item:hover { background: #1c1c1c; }
+.chat-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
-.chat-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; gap: 12px; position: relative; border-bottom: 1px solid #252525; }
-.chat-item:hover { background: #2b2b2b; }
-.chat-avatar { width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-.chat-info { flex: 1; overflow: hidden; }
-.chat-name { font-weight: bold; display: block; }
-.chat-last-msg { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Окно чата */
+.chat-window { flex-grow: 1; display: flex; flex-direction: column; background: #080808; position: relative; }
+.chat-header { padding: 15px 25px; background: #1c1c1c; border-bottom: 1px solid #222; }
+.typing-text { font-size: 12px; color: #7b2ff7; height: 14px; margin-top: 4px; }
 
-/* Кнопка удаления чата */
-.del-btn { opacity: 0; color: #ff4d4d; background: none; border: none; cursor: pointer; transition: 0.2s; }
+.messages-area { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 70%; padding: 10px 15px; border-radius: 18px; font-size: 14px; line-height: 1.4; position: relative; }
+.msg.own { align-self: flex-end; background: #7b2ff7; border-bottom-right-radius: 4px; }
+.msg.others { align-self: flex-start; background: #222; border-bottom-left-radius: 4px; }
+
+.input-panel { padding: 15px 20px; background: #111; border-top: 1px solid #222; display: none; gap: 12px; }
+.input-panel input { flex: 1; background: #222; border: none; padding: 12px 15px; border-radius: 12px; color: #fff; outline: none; }
+.send-btn { background: none; border: none; color: #7b2ff7; font-size: 24px; cursor: pointer; }
+
+/* Выезжающее меню */
+.side-menu { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #111; z-index: 1000; transition: 0.3s ease; padding: 20px; border-right: 1px solid #333; }
+.side-menu.active { left: 0; }
+#menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
+
+.large-avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 2px solid #7b2ff7; }
+.menu-username { font-weight: bold; font-size: 18px; margin-bottom: 20px; }
+.menu-item { padding: 12px 0; cursor: pointer; color: #ccc; transition: 0.2s; }
+.menu-item:hover { color: #fff; transform: translateX(5px); }
+
+/* Модалка обсуждений */
+.modal { display: none; position: fixed; z-index: 2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.85); }
+.modal-content { background:#111; margin: 5vh auto; width: 400px; height: 85vh; border-radius: 20px; display:flex; flex-direction:column; border: 1px solid #333; overflow: hidden; }
+.modal-header { padding: 15px; background:#1c1c1c; display:flex; justify-content:space-between; border-bottom: 1px solid #222; }
+.comment-link { background: rgba(123, 47, 247, 0.1); padding: 5px 10px; border-radius: 10px; margin-top: 8px; font-size: 12px; color: #aeb4ff; cursor: pointer; display: inline-block; }
+
+/* Контекстное меню */
+.context-menu { display: none; position: fixed; background: #222; border: 1px solid #444; border-radius: 8px; z-index: 5000; min-width: 150px; padding: 5px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.del-btn { opacity: 0; color: #ff4d4d; background: none; border: none; cursor: pointer; font-size: 16px; margin-left: auto; }
 .chat-item:hover .del-btn { opacity: 1; }
-
-/* ИСПРАВЛЕНИЕ ИНПУТА (НИЖНЕЙ ПАНЕЛИ) */
-.chat-window {
-    flex-grow: 1; /* Чат забирает всё ОСТАЛЬНОЕ место */
-    display: flex;
-    flex-direction: column;
-}
-
-.input-area {
-    padding: 15px 20px;
-    background: #1c1c1c;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    border-top: 1px solid #333;
-}
-
-.input-area input {
-    flex: 1;
-    background: #2b2b2b;
-    border: none;
-    padding: 12px 15px;
-    border-radius: 10px;
-    color: white;
-    outline: none;
-}
-.chat-header { padding: 15px 25px; background: #242424; border-bottom: 1px solid #333; }
-.typing-text { font-size: 12px; color: #7b2ff7; height: 15px; }
-
-/* ИСПРАВЛЕНИЕ СООБЩЕНИЙ */
-.messages-area {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #0e0e0e; /* Глубокий черный фон для чата */
-}
-
-.msg {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    position: relative;
-    font-size: 15px;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-
-.msg.own {
-    align-self: flex-end; /* Свои - справа */
-    background: #7b2ff7;
-    color: white;
-    border-bottom-right-radius: 2px;
-}
-
-.msg.others {
-    align-self: flex-start; /* Чужие - слева */
-    background: #2b2b2b;
-    color: white;
-    border-bottom-left-radius: 2px;
-}
-.comment-link { background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 10px; margin-top: 8px; font-size: 12px; color: #aeb4ff; cursor: pointer; display: inline-block; }
-
-/* Модалка */
-.modal { display: none; position: fixed; z-index: 10000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); }
-.modal-content { background:#1c1c1c; margin: 5vh auto; width: 400px; height: 85vh; border-radius: 20px; display:flex; flex-direction:column; border: 1px solid #333; }
-.modal-header { padding: 15px; background:#242424; display:flex; justify-content:space-between; border-bottom: 1px solid #333; }
-
-.context-menu { display: none; position: fixed; background: #242424; border: 1px solid #333; border-radius: 8px; z-index: 5000; min-width: 150px; padding: 5px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.menu-item { padding: 10px 15px; cursor: pointer; }
-.menu-item:hover { background: #333; } 
-/* ИСПРАВЛЕНИЕ БОКОВОГО МЕНЮ */
-.large-avatar {
-    width: 80px; /* Была слишком большой */
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    object-fit: cover;
-}
-
-/* Боковое меню теперь скрыто за экраном слева */
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -300px; /* Прячем влево на всю ширину */
-    width: 280px;
-    height: 100vh;
-    background: #111;
-    z-index: 9999; /* Поверх всего */
-    transition: 0.3s ease; /* Плавный выезд */
-    padding: 20px;
-    border-right: 1px solid #333;
-}
-
-/* Когда добавляем класс active (через JS), меню выезжает */
-.side-menu.active {
-    left: 0;
-}
-
-/* Затемнение фона при открытом меню */
-#menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 9998;
-}
-
-/* Исправляем ширину чата, чтобы он занимал всё свободное место */
-.app-container {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.sidebar {
-    width: 350px; /* Список чатов фиксированный */
-    flex-shrink: 0;
-}

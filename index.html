@@ -10,30 +10,33 @@
 </head>
 <body>
 
-    <div id="auth-screen" class="auth-container">
+    <!-- Экран авторизации (Поверх всего) -->
+    <div id="auth-screen" class="auth-full-screen">
         <div class="auth-card">
             <h1>LuxeGram</h1>
-            <input type="text" id="reg-name" placeholder="Введите ваш ник...">
+            <input type="text" id="reg-name" placeholder="Введите ник (без @)...">
             <button onclick="register()">Войти</button>
         </div>
     </div>
 
-    <div class="app-container">
-        <div id="side-menu" class="side-menu">...</div>
-<div id="menu-overlay" onclick="toggleMenu()"></div> <!-- Это важно! -->
-            <div class="menu-header">
-                <img id="menu-avatar" class="large-avatar" src="">
-                <div id="menu-user-name" class="menu-username" onclick="editProfile()" style="cursor:pointer;"></div>
-            </div>
-            <div class="menu-content">
-                <div class="menu-item" onclick="selectChat('Заметки')">🔖 Saved Messages</div>
-                <div class="menu-item" onclick="editProfile()">⚙️ Настройки профиля</div>
-                <hr>
-                <div class="menu-item">👛 Wallet</div>
-            </div>
+    <!-- Выезжающее боковое меню -->
+    <div id="side-menu" class="side-menu">
+        <div class="menu-header">
+            <img id="menu-avatar" class="large-avatar" src="">
+            <div id="menu-user-name" class="menu-username" onclick="editProfile()"></div>
         </div>
-        <div id="menu-overlay" onclick="toggleMenu()"></div>
+        <div class="menu-content">
+            <div class="menu-item" onclick="selectChat('Заметки')">🔖 Saved Messages</div>
+            <div class="menu-item" onclick="editProfile()">⚙️ Настройки</div>
+            <hr style="border: 0.5px solid #222;">
+            <div class="menu-item">👛 Wallet</div>
+        </div>
+    </div>
+    <div id="menu-overlay" onclick="toggleMenu()"></div>
 
+    <!-- Основной интерфейс приложения -->
+    <div class="app-container">
+        <!-- Левая панель: Список чатов -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -42,6 +45,7 @@
             <div id="chat-list" class="chat-list"></div>
         </div>
 
+        <!-- Правая панель: Окно чата -->
         <div class="chat-window">
             <div class="chat-header">
                 <div class="header-info">
@@ -50,14 +54,16 @@
                 </div>
             </div>
             <div id="messages" class="messages-area"></div>
-            <div class="input-area" id="inputPanel" style="display: none;">
-                <input type="text" id="msgInput" placeholder="Напишите сообщение..." oninput="handleTyping()" onkeydown="if(event.key==='Enter') send()">
-                <button onclick="send()">➤</button>
+            
+            <!-- Панель ввода (скрыта, пока чат не выбран) -->
+            <div class="input-panel" id="inputPanel">
+                <input type="text" id="msgInput" placeholder="Написать сообщение..." oninput="handleTyping()" onkeydown="if(event.key==='Enter') send()">
+                <button onclick="send()" class="send-btn">➤</button>
             </div>
         </div>
     </div>
 
-    <!-- Обсуждения под постами -->
+    <!-- Модалка для обсуждений под постами -->
     <div id="comments-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,14 +71,14 @@
                 <button onclick="closeComments()" class="close-btn">✕</button>
             </div>
             <div id="comment-messages" class="messages-area small"></div>
-            <div class="input-area">
+            <div class="input-panel">
                 <input type="text" id="commentInput" placeholder="Ваш комментарий..." onkeydown="if(event.key==='Enter') sendComment()">
                 <button onclick="sendComment()">➤</button>
             </div>
         </div>
     </div>
 
-    <!-- Меню правой кнопки -->
+    <!-- Контекстное меню (ПКМ) -->
     <div id="msg-menu" class="context-menu">
         <div class="menu-item" onclick="editMsg()">✏️ Изменить</div>
         <div class="menu-item delete" onclick="deleteMsg()">🗑️ Удалить</div>
