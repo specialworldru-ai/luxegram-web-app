@@ -1,88 +1,37 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Telegram Style</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-</head>
-<body class="tg-theme">
-
-    <!-- Авторизация -->
-    <div id="auth-screen" class="auth-overlay">
-        <div class="auth-modal">
-            <div class="tg-logo"></div>
-            <h1>LuxeGram</h1>
-            <p>Введите данные для входа</p>
-            <input type="text" id="reg-nickname" placeholder="Имя">
-            <input type="text" id="reg-username" placeholder="@username">
-            <button onclick="register()">Начать общение</button>
-        </div>
-    </div>
-
-    <div class="tg-app">
-        <!-- Левая часть: Список чатов -->
-        <aside class="tg-left-column">
-            <div class="tg-search-area">
-                <div class="menu-btn" onclick="toggleSidebar()">☰</div>
-                <div class="search-input-wrapper">
-                    <input type="text" id="userSearch" placeholder="Поиск" onkeydown="if(event.key==='Enter') searchProfile()">
-                </div>
-            </div>
-            
-            <div class="tg-chats-list" id="chat-list">
-                <!-- Сюда рендерятся чаты -->
-            </div>
-        </aside>
-
-        <!-- Правая часть: Окно чата -->
-        <main class="tg-main-column">
-            <div id="empty-state" class="empty-chat">
-                <div class="empty-label">Выберите, кому хотели бы написать</div>
-            </div>
-
-            <div id="active-chat-window" style="display: none;">
-                <header class="tg-chat-header" onclick="showUserProfile(activeChat)">
-                    <div class="header-avatar" id="header-avatar"></div>
-                    <div class="header-info">
-                        <div class="header-name" id="chat-title">Чат</div>
-                        <div class="header-status" id="chat-status">в сети</div>
-                    </div>
-                </header>
-
-                <div class="tg-messages-container" id="messages">
-                    <!-- Сообщения -->
-                </div>
-
-                <footer class="tg-input-area">
-                    <div class="input-wrapper">
-                        <input type="text" id="msgInput" placeholder="Сообщение" onkeydown="if(event.key==='Enter') send()">
-                        <button class="send-btn" onclick="send()">➤</button>
-                    </div>
-                </footer>
-            </div>
-        </main>
-    </div>
-
-    <!-- Боковое меню настроек -->
-    <div id="main-sidebar" class="tg-sidebar">
-        <div class="sidebar-header">
-            <div class="user-avatar" id="my-avatar"></div>
-            <div class="user-info">
-                <div id="my-nick">Имя</div>
-                <div id="my-user">@username</div>
+<div class="tg-app">
+    <!-- Левая панель: всегда видна -->
+    <aside class="tg-left-column">
+        <div class="tg-search-area">
+            <div onclick="toggleSidebar()" style="cursor:pointer; font-size:20px;">☰</div>
+            <div class="search-input-wrapper">
+                <input type="text" id="userSearch" placeholder="Поиск">
             </div>
         </div>
-        <div class="sidebar-content">
-            <div class="sidebar-item" onclick="toggleTheme()">🌓 Сменить тему</div>
-            <div class="sidebar-item" onclick="openSettings()">⚙️ Настройки</div>
-            <div class="sidebar-item" onclick="showFolder('archive')">📦 Архив</div>
+        <div class="tg-chats-list" id="chat-list">
+            <!-- Сюда script.js подставит чаты -->
         </div>
-    </div>
-    <div id="overlay" onclick="toggleSidebar()"></div>
+    </aside>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <!-- Правая панель: окно чата -->
+    <main class="tg-main-column">
+        <div id="active-chat-window" style="display:none; flex-direction:column; height:100%;">
+            <header class="tg-chat-header" style="padding:10px 20px; background:var(--tg-side);">
+                <span id="chat-title" style="font-weight:bold;"></span>
+            </header>
+            <div id="messages" class="tg-messages-container"></div>
+            <footer class="tg-input-area" style="padding:15px; background:var(--tg-side);">
+                <input type="text" id="msgInput" placeholder="Сообщение..." style="width:85%; padding:10px; border-radius:10px; background:var(--tg-bg); color:#fff; border:none;">
+                <button onclick="send()" style="width:10%; padding:10px; background:var(--tg-accent); border:none; color:#fff; border-radius:10px;">➤</button>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<!-- Выезжающее меню настроек -->
+<div id="main-sidebar" class="tg-sidebar">
+    <h3 id="my-nick">Имя</h3>
+    <p id="my-user" style="opacity:0.6;"></p>
+    <hr style="margin:15px 0; opacity:0.1;">
+    <div onclick="toggleTheme()" style="cursor:pointer; margin-bottom:10px;">🌓 Сменить тему</div>
+    <div onclick="openSettings()" style="cursor:pointer;">⚙️ Настройки</div>
+</div>
