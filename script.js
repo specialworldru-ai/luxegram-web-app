@@ -1,6 +1,6 @@
 // ТВОЙ КОНФИГ FIREBASE - Обязательно вставь свой ключ в apiKey!
 const firebaseConfig = {
-    apiKey: "AIzaSyAs-ТВОЙ_КЛЮЧ_СЮДА", 
+    apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q", 
     authDomain: "luxeffa.firebaseapp.com",
     databaseURL: "https://luxeffa-default-rtdb.firebaseio.com",
     projectId: "luxeffa",
