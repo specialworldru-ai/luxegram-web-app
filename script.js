@@ -2,7 +2,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q", 
     authDomain: "luxeffa.firebaseapp.com",
-    databaseURL: "https://luxeffa-default-rtdb.firebaseio.com",
+    databaseURL: "https://console.firebase.google.com/u/0/project/luxegram-f6e9a/database/luxegram-f6e9a-default-rtdb/data/~2F",
     projectId: "luxeffa",
     storageBucket: "luxeffa.appspot.com",
     messagingSenderId: "772413625432",
