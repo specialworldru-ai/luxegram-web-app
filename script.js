@@ -1,4 +1,3 @@
-// ТВОЙ КОНФИГ FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
   authDomain: "luxegram-f6e9a.firebaseapp.com",
@@ -10,7 +9,6 @@ const firebaseConfig = {
   measurementId: "G-HXDSC0YVJV"
 };
 
-// Инициализация
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -22,82 +20,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const notifySound = document.getElementById('notifySound');
     const sideMenu = document.getElementById('sideMenu');
     const userProfile = document.getElementById('userProfile');
+    let unsubscribe = null;
 
-    let unsubscribe = null; // Для отписки от старого чата
-
-    // СЛУШАЕМ БАЗУ ДАННЫХ
-    function listenToMessages() {
-        if (unsubscribe) unsubscribe(); // Отключаемся от предыдущего чата
-
+    function listen() {
+        if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('chats').doc(activeChatId).collection('messages')
-          .orderBy('timestamp', 'asc')
-          .onSnapshot((snapshot) => {
-              container.innerHTML = '';
-              snapshot.forEach((doc) => {
-                  const msg = doc.data();
-                  const html = `
-                    <div class="message ${msg.type}">
-                        ${msg.text}
-                        <span style="font-size:10px; margin-left:10px; opacity:0.6">${msg.time}</span>
-                    </div>`;
-                  container.insertAdjacentHTML('beforeend', html);
-              });
-              container.scrollTop = container.scrollHeight;
-          });
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snap => {
+                container.innerHTML = '';
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    const html = `<div class="message ${m.type}">${m.text}<span style="font-size:10px; margin-left:10px; opacity:0.6">${m.time}</span></div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+                container.scrollTop = container.scrollHeight;
+            });
     }
 
-    // ОТПРАВКА СООБЩЕНИЯ
-    async function sendMessage() {
+    async function send() {
         const text = input.value.trim();
         if (!text) return;
-
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        try {
-            await db.collection('chats').doc(activeChatId).collection('messages').add({
-                text: text,
-                time: time,
-                type: 'outgoing',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            notifySound.currentTime = 0;
-            notifySound.play().catch(() => {});
-            input.value = "";
-        } catch (e) {
-            console.error("Firebase Error: ", e);
-        }
+        await db.collection('chats').doc(activeChatId).collection('messages').add({
+            text, time, type: 'outgoing', timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        notifySound.currentTime = 0;
+        notifySound.play().catch(() => {});
+        input.value = "";
     }
 
-    // ПЕРЕКЛЮЧЕНИЕ ЧАТОВ
     document.querySelectorAll('.chat-item').forEach(item => {
         item.onclick = () => {
             document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-            activeChatId = item.getAttribute('data-id');
-            document.getElementById('currentChatName').innerText = item.getAttribute('data-name');
-            listenToMessages();
+            activeChatId = item.dataset.id;
+            document.getElementById('currentChatName').innerText = item.dataset.name;
+            listen();
         };
     });
 
-    sendBtn.onclick = sendMessage;
-    input.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+    sendBtn.onclick = send;
+    input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
 
-    // МЕНЮ И ПРОФИЛЬ
+    // ЛОГИКА МЕНЮ
     document.getElementById('openMenuBtn').onclick = (e) => { e.stopPropagation(); sideMenu.classList.add('open'); };
-    document.getElementById('openProfileTrigger').onclick = (e) => {
+    document.getElementById('openProfileTrigger').onclick = () => {
         userProfile.classList.remove('hidden');
         sideMenu.classList.remove('open');
     };
     document.getElementById('closeProfile').onclick = () => userProfile.classList.add('hidden');
+    document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-theme');
 
     document.addEventListener('click', (e) => {
         if (!sideMenu.contains(e.target)) sideMenu.classList.remove('open');
-        if (e.target === userProfile) userProfile.classList.add('hidden');
     });
 
-    document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-theme');
-
-    // Первый запуск
-    listenToMessages();
+    listen();
 });

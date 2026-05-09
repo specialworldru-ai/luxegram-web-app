@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Firebase Edition</title>
+    <title>LuxeGram — Original Top Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,7 +11,7 @@
     <audio id="notifySound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
 
     <div class="app-container">
-        <!-- ОКНО ПРОФИЛЯ -->
+        <!-- ОКНО ПРОФИЛЯ (ПОЛНАЯ ИНФА) -->
         <div id="userProfile" class="user-profile-overlay hidden">
             <div class="profile-card">
                 <div class="profile-header">
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <!-- ЛЕВОЕ МЕНЮ (ТЕМНАЯ ШАПКА) -->
+        <!-- ЛЕВОЕ МЕНЮ (ЧЕРНАЯ ШАПКА ИЗ image_75f61c.png) -->
         <div id="sideMenu" class="side-menu">
             <div class="menu-content">
                 <div class="menu-header-dark" id="openProfileTrigger">
@@ -53,6 +53,7 @@
                 </div>
                 <div class="menu-body">
                     <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
+                    <div class="menu-item"><i class="fa-solid fa-user-group"></i> Создать группу</div>
                     <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Избранное</div>
                     <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
                 </div>
@@ -62,21 +63,21 @@
         <aside class="sidebar">
             <header class="sidebar-header">
                 <div class="menu-icon" id="openMenuBtn"><i class="fa-solid fa-bars"></i></div>
-                <input type="text" id="searchInput" placeholder="Поиск" class="search-input">
+                <input type="text" placeholder="Поиск" class="search-input">
             </header>
             <div class="chats-list">
                 <div class="chat-item active" data-id="support" data-name="LuxeGram Support">
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">База данных подключена!</div>
+                        <div class="last-message">Firebase подключен незаметно!</div>
                     </div>
                 </div>
                 <div class="chat-item" data-id="durov" data-name="Павел Дуров">
                     <div class="avatar" style="background: #e67e22;">ПД</div>
                     <div class="chat-info">
                         <div class="chat-name">Павел Дуров</div>
-                        <div class="last-message">Firebase — это мощно.</div>
+                        <div class="last-message">Это выглядит как надо.</div>
                     </div>
                 </div>
             </div>
@@ -99,7 +100,7 @@
         </main>
     </div>
 
-    <!-- Firebase SDK (Compat версии для простоты) -->
+    <!-- Firebase SDK Compat (чтобы не ломать логику) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
