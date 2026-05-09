@@ -1,3 +1,16 @@
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCQlUa13e_NKzzUL-PhI4HXETKno2x029Q",
+  authDomain: "luxegram-f6e9a.firebaseapp.com",
+  databaseURL: "https://luxegram-f6e9a-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "luxegram-f6e9a",
+  storageBucket: "luxegram-f6e9a.firebasestorage.app",
+  messagingSenderId: "64533495549",
+  appId: "1:64533495549:web:8f60c9243ca771204b4894",
+  measurementId: "G-HXDSC0YVJV"
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const chatData = {
         'support': [{ text: "Система LuxeGram готова к работе!", time: "12:00", type: "incoming" }],
