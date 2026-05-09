@@ -9,12 +9,54 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Окно профиля (скрыто по умолчанию) -->
+        <div id="userProfile" class="user-profile-overlay hidden">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <button id="closeProfile"><i class="fa-solid fa-arrow-left"></i></button>
+                    <span>Информация</span>
+                    <i class="fa-solid fa-pen"></i>
+                </div>
+                <div class="profile-main">
+                    <div class="profile-avatar-big">L</div>
+                    <div class="profile-name">LuxeGram User</div>
+                    <div class="profile-status">в сети</div>
+                </div>
+                <div class="profile-info-list">
+                    <div class="info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <div class="info-val">+7 999 000-00-00</div>
+                            <div class="info-label">Номер телефона</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-at"></i>
+                        <div>
+                            <div class="info-val">@luxeffa_dev</div>
+                            <div class="info-label">Имя пользователя</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <div class="info-val">Создаю лучший мессенджер на Git!</div>
+                            <div class="info-label">О себе</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Левое меню -->
         <div id="sideMenu" class="side-menu">
             <div class="menu-content">
-                <div class="menu-header">
-                    <div class="avatar">L</div>
-                    <div class="menu-user-info">LuxeGram User</div>
+                <div class="menu-header" id="openProfileTrigger">
+                    <div class="avatar clickable">L</div>
+                    <div class="menu-user-info">
+                        <div class="user-name">LuxeGram User</div>
+                        <div class="user-phone">+7 999 000-00-00</div>
+                    </div>
                 </div>
                 <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
                 <div class="menu-item"><i class="fa-solid fa-user"></i> Контакты</div>
@@ -34,7 +76,7 @@
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Добро пожаловать в мессенджер!</div>
+                        <div class="last-message">Все функции активированы!</div>
                     </div>
                 </div>
                 <div class="chat-item" data-name="Павел Дуров">
@@ -59,16 +101,8 @@
                 </div>
             </header>
 
-            <div class="messages-container" id="messagesContainer">
-                <div class="message incoming">
-                    <div class="message-content">
-                        Привет! Теперь тут всё работает: меню слева, поиск по чатам и эмодзи.
-                        <span class="message-time">20:41</span>
-                    </div>
-                </div>
-            </div>
+            <div class="messages-container" id="messagesContainer"></div>
 
-            <!-- Панель эмодзи -->
             <div id="emojiPicker" class="emoji-picker hidden">
                 <span>😊</span><span>😂</span><span>😍</span><span>🔥</span><span>👍</span><span>❤️</span><span>😎</span><span>👋</span>
             </div>
