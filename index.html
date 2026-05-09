@@ -1,37 +1,82 @@
-<div class="tg-app">
-    <!-- Левая панель: всегда видна -->
-    <aside class="tg-left-column">
-        <div class="tg-search-area">
-            <div onclick="toggleSidebar()" style="cursor:pointer; font-size:20px;">☰</div>
-            <div class="search-input-wrapper">
-                <input type="text" id="userSearch" placeholder="Поиск">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeGram - Discord Style</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <!-- Экран входа -->
+    <div id="auth-screen" class="ds-auth-wrapper">
+        <div class="ds-auth-box">
+            <h2>С возвращением!</h2>
+            <p>Мы так рады видеть тебя снова.</p>
+            <div class="input-group">
+                <label>ОТОБРАЖАЕМОЕ ИМЯ</label>
+                <input type="text" id="reg-nickname" placeholder="Твой никнейм">
             </div>
+            <div class="input-group">
+                <label>ИМЯ ПОЛЬЗОВАТЕЛЯ</label>
+                <input type="text" id="reg-username" placeholder="Без символа @">
+            </div>
+            <button onclick="register()" class="ds-btn">Войти</button>
         </div>
-        <div class="tg-chats-list" id="chat-list">
-            <!-- Сюда script.js подставит чаты -->
-        </div>
-    </aside>
+    </div>
 
-    <!-- Правая панель: окно чата -->
-    <main class="tg-main-column">
-        <div id="active-chat-window" style="display:none; flex-direction:column; height:100%;">
-            <header class="tg-chat-header" style="padding:10px 20px; background:var(--tg-side);">
-                <span id="chat-title" style="font-weight:bold;"></span>
+    <!-- Основное приложение -->
+    <div class="ds-app">
+        <!-- Левый сайдбар -->
+        <aside class="ds-sidebar">
+            <div class="ds-sidebar-header">
+                <h3>Luxe Server</h3>
+            </div>
+            
+            <div class="ds-channel-list" id="chat-list">
+                <!-- Каналы генерируются тут -->
+            </div>
+
+            <!-- Панель профиля внизу слева -->
+            <div class="ds-user-panel">
+                <div class="ds-user-info">
+                    <img id="my-avatar" class="ds-avatar-small" src="">
+                    <div class="ds-user-text">
+                        <div id="my-nick" class="ds-nick">Имя</div>
+                        <div id="my-user" class="ds-tag">#tag</div>
+                    </div>
+                </div>
+                <div class="ds-user-controls">
+                    <span onclick="alert('Настройки в разработке!')" title="Настройки">⚙️</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Основная зона чата -->
+        <main class="ds-main-chat">
+            <header class="ds-chat-header">
+                <span class="ds-hash">#</span>
+                <span id="chat-title" class="ds-chat-name">выберите-канал</span>
             </header>
-            <div id="messages" class="tg-messages-container"></div>
-            <footer class="tg-input-area" style="padding:15px; background:var(--tg-side);">
-                <input type="text" id="msgInput" placeholder="Сообщение..." style="width:85%; padding:10px; border-radius:10px; background:var(--tg-bg); color:#fff; border:none;">
-                <button onclick="send()" style="width:10%; padding:10px; background:var(--tg-accent); border:none; color:#fff; border-radius:10px;">➤</button>
-            </footer>
-        </div>
-    </main>
-</div>
 
-<!-- Выезжающее меню настроек -->
-<div id="main-sidebar" class="tg-sidebar">
-    <h3 id="my-nick">Имя</h3>
-    <p id="my-user" style="opacity:0.6;"></p>
-    <hr style="margin:15px 0; opacity:0.1;">
-    <div onclick="toggleTheme()" style="cursor:pointer; margin-bottom:10px;">🌓 Сменить тему</div>
-    <div onclick="openSettings()" style="cursor:pointer;">⚙️ Настройки</div>
-</div>
+            <div class="ds-messages" id="messages">
+                <div class="ds-welcome">
+                    <h1>Добро пожаловать!</h1>
+                    <p>Выбери канал слева, чтобы начать общение.</p>
+                </div>
+            </div>
+
+            <div class="ds-input-area" id="input-area" style="display: none;">
+                <div class="ds-input-wrapper">
+                    <span class="ds-input-add">+</span>
+                    <input type="text" id="msgInput" placeholder="Написать..." onkeydown="if(event.key==='Enter') send()">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
