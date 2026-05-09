@@ -97,16 +97,32 @@ function listenMessages(key) {
 
 function send() {
     let inp = document.getElementById('msgInput');
-    if (!inp.value.trim()) return;
-    let key = (activeChat === 'LuxeNews' || activeChat === 'CryptoWorld') ? "channel_" + activeChat : (activeChat === 'Заметки' ? 'notes_' + currentUser.user : 'private_' + [currentUser.user, activeChat].sort().join('_'));
+    let text = inp.value.trim();
+    if (!text || !activeChat) return; // Проверка, что чат выбран
+
+    // Генерация ключа (должна быть идентична selectChat)
+    let key;
+    if (activeChat === 'LuxeNews' || activeChat === 'CryptoWorld') {
+        key = "channel_" + activeChat;
+    } else if (activeChat === 'Заметки') {
+        key = 'notes_' + currentUser.user;
+    } else {
+        // Личные сообщения: ники сортируются, чтобы у обоих юзеров был один путь
+        key = 'private_' + [currentUser.user, activeChat].sort().join('_');
+    }
+    
     db.ref('chats/' + key).push({
         from: currentUser.user,
-        text: inp.value,
+        text: text,
         time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
         date: new Date().toLocaleDateString(),
         read: false
+    }).then(() => {
+        inp.value = ""; // Очищаем только после успешной отправки
+    }).catch((error) => {
+        console.error("Ошибка отправки:", error);
+        alert("Ошибка Firebase: проверь консоль (F12)");
     });
-    inp.value = "";
 }
 
 function toggleMenu() {
