@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('openProfileTrigger').onclick = (e) => {
         e.stopPropagation();
         userProfile.classList.remove('hidden');
-        sideMenu.classList.remove('open'); // ЗАКРЫВАЕМ МЕНЮ ПРИ ОТКРЫТИИ ПРОФИЛЯ
+        sideMenu.classList.remove('open');
     };
 
     document.getElementById('closeProfile').onclick = () => userProfile.classList.add('hidden');

@@ -3,6 +3,7 @@
     --bg-chat-area: #c7d7e2; --bg-input: #ffffff; --text-main: #000000;
     --text-secondary: #707579; --accent: #3390ec; --msg-in: #ffffff;
     --msg-out: #effdde; --border: #dfe1e5;
+    --menu-gradient: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
 }
 
 body.dark-theme {
@@ -10,10 +11,11 @@ body.dark-theme {
     --bg-chat-area: #0e1621; --bg-input: #17212b; --text-main: #ffffff;
     --text-secondary: #aaaaaa; --accent: #2f8cc9; --msg-in: #182533;
     --msg-out: #2b5278; --border: #0e1621;
+    --menu-gradient: linear-gradient(to bottom, #2b5278, #17212b);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
-body { background: var(--bg-app); height: 100vh; overflow: hidden; }
+body { background: var(--bg-app); height: 100vh; overflow: hidden; transition: background 0.3s; }
 .app-container { width: 100%; height: 100vh; display: flex; position: relative; }
 
 /* Скроллбары */
@@ -26,10 +28,7 @@ body { background: var(--bg-app); height: 100vh; overflow: hidden; }
     background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center;
 }
 .user-profile-overlay.hidden { display: none; }
-.profile-card {
-    width: 400px; background: var(--bg-sidebar); border-radius: 10px; overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
+.profile-card { width: 400px; background: var(--bg-sidebar); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 .profile-header { padding: 15px; background: var(--bg-sidebar); display: flex; align-items: center; justify-content: space-between; color: var(--text-main); border-bottom: 1px solid var(--border); }
 .profile-header button { background: none; border: none; font-size: 20px; color: var(--text-secondary); cursor: pointer; }
 .profile-main { padding: 30px; text-align: center; background: var(--bg-app); color: var(--text-main); }
@@ -40,16 +39,27 @@ body { background: var(--bg-app); height: 100vh; overflow: hidden; }
 .info-val { font-size: 15px; font-weight: 500; }
 .info-label { font-size: 12px; color: var(--text-secondary); }
 
-/* Боковое меню */
+/* Боковое меню (Обновленный TG-дизайн) */
 .side-menu {
     position: absolute; left: -300px; top: 0; width: 280px; height: 100%;
     background: var(--bg-sidebar); z-index: 150; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3); display: flex; flex-direction: column;
 }
 .side-menu.open { left: 0; }
-.menu-header { padding: 20px; background: var(--accent); color: white; cursor: pointer; }
+.menu-header-gradient { padding: 30px 20px 20px; background: var(--menu-gradient); color: white; cursor: pointer; }
+.menu-user-info { margin-top: 15px; }
+.user-name { font-weight: bold; font-size: 16px; }
+.user-phone { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+.menu-body { flex: 1; padding: 10px 0; overflow-y: auto; }
+.menu-item { 
+    padding: 12px 20px; color: var(--text-main); cursor: pointer; 
+    display: flex; align-items: center; gap: 25px; transition: 0.2s; 
+    font-size: 14px; font-weight: 500;
+}
+.menu-item i { width: 20px; color: var(--text-secondary); font-size: 18px; text-align: center; }
+.menu-item:hover { background: rgba(0,0,0,0.05); }
 
-/* Остальные стили */
+/* Sidebar & Chat - ОСТАЛОСЬ СТАРОЕ */
 .sidebar { width: 350px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
 .sidebar-header { padding: 15px; display: flex; align-items: center; gap: 15px; }
 .menu-icon { cursor: pointer; font-size: 20px; color: var(--text-secondary); }
