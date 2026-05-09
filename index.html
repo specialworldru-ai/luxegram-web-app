@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Final Build</title>
+    <title>LuxeGram — Professional Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,7 +11,7 @@
     <audio id="notifySound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
 
     <div class="app-container">
-        <!-- ОКНО ПРОФИЛЯ -->
+        <!-- ОКНО ПРОФИЛЯ (ВСЯ ИНФА ТУТ) -->
         <div id="userProfile" class="user-profile-overlay hidden">
             <div class="profile-card">
                 <div class="profile-header">
@@ -27,33 +27,24 @@
                 <div class="profile-info-list">
                     <div class="info-item">
                         <i class="fa-solid fa-phone"></i>
-                        <div>
-                            <div class="info-val">+7 999 000-00-00</div>
-                            <div class="info-label">Номер телефона</div>
-                        </div>
+                        <div><div class="info-val">+7 999 000-00-00</div><div class="info-label">Номер телефона</div></div>
                     </div>
                     <div class="info-item">
                         <i class="fa-solid fa-at"></i>
-                        <div>
-                            <div class="info-val">@luxeffa_dev</div>
-                            <div class="info-label">Имя пользователя</div>
-                        </div>
+                        <div><div class="info-val">@luxeffa_dev</div><div class="info-label">Имя пользователя</div></div>
                     </div>
                     <div class="info-item">
                         <i class="fa-solid fa-circle-info"></i>
-                        <div>
-                            <div class="info-val">Создаю лучший мессенджер на Git!</div>
-                            <div class="info-label">О себе</div>
-                        </div>
+                        <div><div class="info-val">Создаю лучший мессенджер!</div><div class="info-label">О себе</div></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ЛЕВОЕ МЕНЮ (Обновленный дизайн) -->
+        <!-- ЛЕВОЕ МЕНЮ (ТОТ САМЫЙ ТЕМНЫЙ СТИЛЬ) -->
         <div id="sideMenu" class="side-menu">
             <div class="menu-content">
-                <div class="menu-header-gradient" id="openProfileTrigger">
+                <div class="menu-header-dark" id="openProfileTrigger">
                     <div class="avatar clickable">L</div>
                     <div class="menu-user-info">
                         <div class="user-name">LuxeGram User</div>
@@ -61,12 +52,10 @@
                     </div>
                 </div>
                 <div class="menu-body">
+                    <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
                     <div class="menu-item"><i class="fa-solid fa-user-group"></i> Создать группу</div>
                     <div class="menu-item"><i class="fa-solid fa-bullhorn"></i> Создать канал</div>
-                    <div class="menu-item"><i class="fa-solid fa-user"></i> Контакты</div>
-                    <div class="menu-item"><i class="fa-solid fa-phone"></i> Звонки</div>
                     <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Избранное</div>
-                    <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
                     <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
                 </div>
             </div>
@@ -82,14 +71,14 @@
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Система готова к работе!</div>
+                        <div class="last-message">Система готова!</div>
                     </div>
                 </div>
                 <div class="chat-item" data-id="durov" data-name="Павел Дуров">
                     <div class="avatar" style="background: #e67e22;">ПД</div>
                     <div class="chat-info">
                         <div class="chat-name">Павел Дуров</div>
-                        <div class="last-message">Вернул стену, проверяй.</div>
+                        <div class="last-message">Как дела с Luxeffa?</div>
                     </div>
                 </div>
             </div>
@@ -97,25 +86,19 @@
 
         <main class="main-chat">
             <header class="chat-header">
-                <div class="chat-title-container">
-                    <div class="chat-name" id="currentChatName">LuxeGram Support</div>
-                    <div class="chat-status">в сети</div>
-                </div>
+                <div class="chat-name" id="currentChatName">LuxeGram Support</div>
                 <div class="header-icons">
-                    <i class="fa-solid fa-magnifying-glass action-icon" id="searchInChat"></i>
-                    <i class="fa-solid fa-ellipsis-vertical action-icon" id="chatOptions"></i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
                 </div>
             </header>
-
             <div class="messages-container" id="messagesContainer"></div>
-
             <div id="emojiPicker" class="emoji-picker hidden">
-                <span>😊</span><span>😂</span><span>😍</span><span>🔥</span><span>👍</span><span>❤️</span>
+                <span>😊</span><span>😂</span><span>🔥</span><span>👍</span><span>❤️</span><span>😎</span>
             </div>
-
             <footer class="chat-input-area">
                 <button class="icon-btn"><i class="fa-regular fa-paperclip"></i></button>
-                <input type="text" id="messageInput" placeholder="Напишите сообщение..." autocomplete="off">
+                <input type="text" id="messageInput" placeholder="Напишите сообщение...">
                 <button class="icon-btn" id="emojiBtn"><i class="fa-regular fa-face-smile"></i></button>
                 <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
             </footer>
