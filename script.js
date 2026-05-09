@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeChatId = 'support';
     const container = document.getElementById('messagesContainer');
     const input = document.getElementById('messageInput');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const emojiPicker = document.getElementById('emojiPicker');
     const sendBtn = document.getElementById('sendBtn');
     const notifySound = document.getElementById('notifySound');
     const sideMenu = document.getElementById('sideMenu');
@@ -47,7 +49,21 @@ document.addEventListener('DOMContentLoaded', () => {
         notifySound.currentTime = 0;
         notifySound.play().catch(() => {});
         input.value = "";
+        emojiPicker.classList.add('hidden');
     }
+
+    // ЭМОДЗИ ЛОГИКА
+    emojiBtn.onclick = (e) => {
+        e.stopPropagation();
+        emojiPicker.classList.toggle('hidden');
+    };
+
+    document.querySelectorAll('#emojiPicker span').forEach(s => {
+        s.onclick = () => {
+            input.value += s.innerText;
+            input.focus();
+        };
+    });
 
     document.querySelectorAll('.chat-item').forEach(item => {
         item.onclick = () => {
@@ -62,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sendBtn.onclick = send;
     input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
 
-    // ЛОГИКА МЕНЮ
     document.getElementById('openMenuBtn').onclick = (e) => { e.stopPropagation(); sideMenu.classList.add('open'); };
     document.getElementById('openProfileTrigger').onclick = () => {
         userProfile.classList.remove('hidden');
@@ -73,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         if (!sideMenu.contains(e.target)) sideMenu.classList.remove('open');
+        if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) emojiPicker.classList.add('hidden');
     });
 
     listen();

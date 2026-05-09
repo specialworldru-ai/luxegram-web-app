@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Original Top Edition</title>
+    <title>LuxeGram — Full Firebase Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,7 +11,7 @@
     <audio id="notifySound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
 
     <div class="app-container">
-        <!-- ОКНО ПРОФИЛЯ (ПОЛНАЯ ИНФА) -->
+        <!-- ПРОФИЛЬ -->
         <div id="userProfile" class="user-profile-overlay hidden">
             <div class="profile-card">
                 <div class="profile-header">
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <!-- ЛЕВОЕ МЕНЮ (ЧЕРНАЯ ШАПКА ИЗ image_75f61c.png) -->
+        <!-- МЕНЮ (ВСЕ ПУНКТЫ НА МЕСТЕ) -->
         <div id="sideMenu" class="side-menu">
             <div class="menu-content">
                 <div class="menu-header-dark" id="openProfileTrigger">
@@ -54,6 +54,7 @@
                 <div class="menu-body">
                     <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
                     <div class="menu-item"><i class="fa-solid fa-user-group"></i> Создать группу</div>
+                    <div class="menu-item"><i class="fa-solid fa-bullhorn"></i> Создать канал</div>
                     <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Избранное</div>
                     <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
                 </div>
@@ -70,14 +71,14 @@
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Firebase подключен незаметно!</div>
+                        <div class="last-message">Всё на месте!</div>
                     </div>
                 </div>
                 <div class="chat-item" data-id="durov" data-name="Павел Дуров">
                     <div class="avatar" style="background: #e67e22;">ПД</div>
                     <div class="chat-info">
                         <div class="chat-name">Павел Дуров</div>
-                        <div class="last-message">Это выглядит как надо.</div>
+                        <div class="last-message">Теперь идеально.</div>
                     </div>
                 </div>
             </div>
@@ -92,15 +93,21 @@
                 </div>
             </header>
             <div class="messages-container" id="messagesContainer"></div>
+            
+            <!-- ПАНЕЛЬ ЭМОДЗИ -->
+            <div id="emojiPicker" class="emoji-picker hidden">
+                <span>😊</span><span>😂</span><span>🔥</span><span>👍</span><span>❤️</span><span>😎</span><span>👏</span><span>🎉</span>
+            </div>
+
             <footer class="chat-input-area">
                 <button class="icon-btn"><i class="fa-regular fa-paperclip"></i></button>
                 <input type="text" id="messageInput" placeholder="Напишите сообщение...">
+                <button class="icon-btn" id="emojiBtn"><i class="fa-regular fa-face-smile"></i></button>
                 <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
             </footer>
         </main>
     </div>
 
-    <!-- Firebase SDK Compat (чтобы не ломать логику) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
