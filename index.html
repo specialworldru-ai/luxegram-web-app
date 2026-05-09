@@ -3,57 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram</title>
+    <title>LuxeGram — Final Build</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Иконки (по желанию) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Боковая панель -->
+        <!-- Левое меню (выезжающее) -->
+        <div id="sideMenu" class="side-menu">
+            <div class="menu-content">
+                <div class="menu-header">LuxeGram</div>
+                <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
+                <div class="menu-item"><i class="fa-solid fa-user"></i> Контакты</div>
+                <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
+            </div>
+        </div>
+
         <aside class="sidebar">
             <header class="sidebar-header">
-                <div class="menu-icon">☰</div>
-                <input type="text" placeholder="Поиск" class="search-input">
+                <div class="menu-icon" id="openMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <input type="text" id="searchInput" placeholder="Поиск" class="search-input">
             </header>
             <div class="chats-list" id="chatsList">
-                <div class="chat-item active">
+                <div class="chat-item active" data-name="LuxeGram Support">
                     <div class="avatar">L</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Добро пожаловать в LuxeGram!</div>
+                        <div class="last-message">Добро пожаловать!</div>
+                    </div>
+                </div>
+                <div class="chat-item" data-name="Павел Дуров">
+                    <div class="avatar" style="background: #e67e22;">ПД</div>
+                    <div class="chat-info">
+                        <div class="chat-name">Павел Дуров</div>
+                        <div class="last-message">Как тебе LuxeGram?</div>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Окно чата -->
         <main class="main-chat">
             <header class="chat-header">
                 <div class="chat-title-container">
-                    <div class="chat-name">LuxeGram Support</div>
+                    <div class="chat-name" id="currentChatName">LuxeGram Support</div>
                     <div class="chat-status">в сети</div>
                 </div>
                 <div class="header-icons">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <i class="fa-solid fa-magnifying-glass action-icon" id="searchInChat"></i>
+                    <i class="fa-solid fa-ellipsis-vertical action-icon" id="chatOptions"></i>
                 </div>
             </header>
 
-            <div class="messages-container" id="messagesContainer">
-                <div class="message incoming">
-                    <div class="message-content">
-                        Привет! Это твоя копия Telegram — LuxeGram. Начинай писать код!
-                        <span class="message-time">20:41</span>
-                    </div>
-                </div>
+            <div class="messages-container" id="messagesContainer"></div>
+
+            <!-- Простая панель эмодзи -->
+            <div id="emojiPicker" class="emoji-picker hidden">
+                <span>😊</span><span>😂</span><span>😍</span><span>🔥</span><span>👍</span><span>❤️</span>
             </div>
 
             <footer class="chat-input-area">
-                <i class="fa-regular fa-paperclip"></i>
+                <button class="icon-btn" id="attachBtn"><i class="fa-regular fa-paperclip"></i></button>
                 <input type="text" id="messageInput" placeholder="Напишите сообщение..." autocomplete="off">
-                <i class="fa-regular fa-face-smile"></i>
-                <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                <button class="icon-btn" id="emojiBtn"><i class="fa-regular fa-face-smile"></i></button>
+                <button id="sendBtn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
             </footer>
         </main>
     </div>
