@@ -19,47 +19,49 @@ body.light-mode {
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
 
-.app-container { display: flex; width: 100vw; height: 100vh; }
+/* Экран входа */
+.auth-full-screen { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.auth-card { background: var(--side); padding: 30px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
 
-/* Боковая панель */
-.sidebar { width: 320px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-.sidebar-header { padding: 15px; display: flex; gap: 10px; }
-.menu-toggle { cursor: pointer; font-size: 20px; }
-#searchUser { flex: 1; background: var(--bg); border: none; color: var(--text); padding: 8px; border-radius: 5px; }
+.app-container { display: flex; width: 100vw; height: 100vh; position: relative; }
+
+/* Боковая панель (Sidebar) */
+.sidebar { width: 320px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
+.sidebar-header { padding: 15px; display: flex; gap: 10px; align-items: center; }
 
 /* Список чатов */
 .chat-list { flex: 1; overflow-y: auto; }
-.chat-item { display: flex; align-items: center; padding: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.chat-item:hover { background: rgba(255,255,255,0.05); }
-.chat-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; }
+.chat-item { display: flex; align-items: center; padding: 12px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.chat-item:hover { background: rgba(255,255,255,0.1); }
+.chat-avatar { width: 48px; height: 48px; border-radius: 50%; margin-right: 12px; }
 
-/* Окно сообщений */
-.chat-window { flex: 1; display: flex; flex-direction: column; }
+/* Основное окно чата */
+.chat-window { flex: 1; display: flex; flex-direction: column; background: var(--bg); }
+.chat-header { padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; }
 .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
 
 /* Сообщения */
-.msg { max-width: 70%; padding: 10px 15px; border-radius: 15px; position: relative; word-wrap: break-word; }
-.msg.own { align-self: flex-end; background: var(--msg-own); color: #fff; }
-.msg.others { align-self: flex-start; background: var(--msg-other); }
+.msg { max-width: 75%; padding: 10px 15px; border-radius: 18px; position: relative; line-height: 1.4; }
+.msg.own { align-self: flex-end; background: var(--msg-own); color: #fff; border-bottom-right-radius: 4px; }
+.msg.others { align-self: flex-start; background: var(--msg-other); border-bottom-left-radius: 4px; }
+.channel-mode .msg { align-self: flex-start !important; background: var(--msg-other) !important; border-bottom-left-radius: 4px !important; }
 
-/* Режим канала: всё слева */
-.channel-mode .msg { align-self: flex-start !important; background: var(--msg-other) !important; }
+/* Выезжающее меню */
+.side-menu { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: var(--side); z-index: 2000; transition: 0.3s; padding: 20px; border-right: 1px solid var(--border); }
+.side-menu.active { left: 0; }
+#menu-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1500; }
+#menu-overlay.active { display: block; }
 
-.msg-info { display: flex; align-items: center; justify-content: flex-end; font-size: 10px; opacity: 0.7; margin-top: 5px; gap: 5px; }
-.ticks.read { color: #40d7ff; font-weight: bold; }
+/* Модалки */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; }
+.modal-content { background: var(--side); padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+
+/* Панель ввода */
+.input-panel { padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--border); }
+.input-panel input { flex: 1; padding: 12px; border-radius: 20px; border: none; background: var(--msg-other); color: var(--text); }
 
 /* Правая панель */
 .right-panel { width: 0; background: var(--side); border-left: 1px solid var(--border); transition: 0.3s; overflow: hidden; }
 .right-panel.active { width: 300px; }
-.profile-big-img { width: 120px; height: 120px; border-radius: 50%; margin: 20px auto; display: block; }
-.profile-content { text-align: center; padding: 20px; }
-
-/* Модалки и меню */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; }
-.modal-content { background: var(--side); width: 350px; margin: 15vh auto; padding: 25px; border-radius: 15px; text-align: center; }
-
-.context-menu { position: fixed; display: none; background: var(--side); border: 1px solid var(--border); border-radius: 8px; z-index: 5000; width: 180px; }
-.menu-item { padding: 10px 15px; cursor: pointer; }
-.menu-item:hover { background: var(--accent); color: #fff; }

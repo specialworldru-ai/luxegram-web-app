@@ -2,117 +2,80 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LuxeGram</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body class="dark-mode">
 
-    <!-- Экран входа -->
     <div id="auth-screen" class="auth-full-screen">
         <div class="auth-card">
             <h1>LuxeGram</h1>
-            <input type="text" id="reg-nickname" placeholder="Ваше имя (Ник)...">
-            <input type="text" id="reg-username" placeholder="Username (@user)...">
+            <input type="text" id="reg-nickname" placeholder="Ваше имя (Ник)..."><br><br>
+            <input type="text" id="reg-username" placeholder="Username (@user)..."><br><br>
             <button onclick="register()">Войти</button>
         </div>
     </div>
 
-    <!-- Левое меню (бургер) -->
     <div id="side-menu" class="side-menu">
         <div class="menu-header">
-            <img id="menu-avatar" class="large-avatar" src="">
-            <div id="menu-info">
-                <div id="menu-nick" class="menu-nick"></div>
-                <div id="menu-user" class="menu-user"></div>
-            </div>
+            <img id="menu-avatar" style="width:60px; border-radius:50%;">
+            <div id="menu-nick" style="font-weight:bold; margin-top:10px;"></div>
+            <div id="menu-user" style="opacity:0.6; font-size:14px;"></div>
         </div>
-        <div class="menu-content">
-            <div class="menu-item" onclick="showFolder('all')">📱 Все чаты</div>
-            <div class="menu-item" onclick="showFolder('archive')">📦 Архив</div>
-            <div class="menu-item" onclick="openSettings()">⚙️ Настройки</div>
-            <hr>
-            <div class="menu-item" onclick="createNewFolder()">📁 Создать папку</div>
-        </div>
+        <hr>
+        <div class="menu-item" onclick="showFolder('all'); toggleMenu()">📱 Все чаты</div>
+        <div class="menu-item" onclick="showFolder('archive'); toggleMenu()">📦 Архив</div>
+        <div class="menu-item" onclick="openSettings(); toggleMenu()">⚙️ Настройки</div>
     </div>
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
     <div class="app-container">
-        <!-- Боковая панель со списком чатов -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-                <input type="text" id="searchUser" placeholder="Поиск профиля..." onkeydown="if(event.key==='Enter') searchProfile()">
+                <span onclick="toggleMenu()" style="cursor:pointer; font-size:24px;">☰</span>
+                <input type="text" id="searchUser" placeholder="Поиск..." onkeydown="if(event.key==='Enter') searchProfile()">
             </div>
-            <div id="folder-tabs" class="folder-tabs">
-                <div class="folder-tab active" onclick="showFolder('all')">Все</div>
-            </div>
-            <div id="chat-list" class="chat-list"></div>
+            <div id="chat-list"></div>
         </div>
 
-        <!-- Окно чата -->
         <div class="chat-window">
-            <div class="chat-header">
-                <div class="header-info" onclick="showUserProfile(activeChat)">
-                    <h3 id="current-chat-title">Выберите чат</h3>
-                    <div id="typing-indicator" class="typing-text"></div>
-                </div>
+            <div class="chat-header" id="chatHeader" onclick="showUserProfile(activeChat)">
+                <h3 id="current-chat-title">Выберите чат</h3>
             </div>
             <div id="messages" class="messages-area"></div>
-            <div class="input-panel" id="inputPanel" style="display: none;">
-                <input type="text" id="msgInput" placeholder="Написать..." oninput="handleTyping()" onkeydown="if(event.key==='Enter') send()">
+            <div class="input-panel" id="inputPanel" style="display:none;">
+                <input type="text" id="msgInput" placeholder="Написать..." onkeydown="if(event.key==='Enter') send()">
                 <button onclick="send()">➤</button>
             </div>
         </div>
 
-        <!-- Правая панель профиля -->
         <div id="user-profile-panel" class="right-panel">
-            <button class="close-right" onclick="closeRightPanel()">✕</button>
             <div class="profile-content">
-                <img id="profile-img" class="profile-big-img" src="">
+                <button onclick="closeRightPanel()">✕</button>
+                <img id="profile-img" class="profile-big-img">
                 <h2 id="profile-nick"></h2>
                 <p id="profile-user"></p>
-                <div class="profile-actions">
-                    <button onclick="alert('Фича в разработке')">Добавить в папку</button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Модалка настроек -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <h2>Настройки</h2>
-            <div class="setting-row">
-                <span>Тема:</span>
-                <button onclick="toggleTheme()">Светлая/Темная</button>
-            </div>
-            <div class="setting-row">
-                <span>Язык:</span>
-                <select id="lang-select">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-            <hr>
+            <button onclick="toggleTheme()">Светлая/Темная тема</button><br><br>
             <input type="text" id="edit-nick" placeholder="Новый Ник">
-            <button onclick="updateProfile('nick')">Сменить Ник</button>
-            <br><br>
+            <button onclick="updateProfile('nick')">Ок</button><br><br>
             <input type="text" id="edit-user" placeholder="Новый @user">
-            <button onclick="updateProfile('user')">Сменить Юзернейм</button>
-            <br><br>
-            <button onclick="closeSettings()" class="close-btn">Закрыть</button>
+            <button onclick="updateProfile('user')">Ок</button><br><br>
+            <button onclick="closeSettings()">Закрыть</button>
         </div>
     </div>
 
-    <!-- Контекстное меню -->
-    <div id="chat-context-menu" class="context-menu">
-        <div class="menu-item" id="pin-opt" onclick="togglePin()">📌 Закрепить</div>
-        <div class="menu-item" id="archive-opt" onclick="toggleArchive()">📦 В архив</div>
-        <div class="menu-item delete" onclick="deleteFullChat()">🗑️ Удалить</div>
+    <div id="chat-context-menu" class="context-menu" style="display:none; position:fixed; background:#222; border:1px solid #444; z-index:5000;">
+        <div class="menu-item" id="pin-opt" onclick="togglePin()" style="padding:10px; cursor:pointer;">Закрепить</div>
+        <div class="menu-item" onclick="toggleArchive()" style="padding:10px; cursor:pointer;">В архив</div>
     </div>
 
     <script src="script.js"></script>
