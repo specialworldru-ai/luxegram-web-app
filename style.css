@@ -22,9 +22,9 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0e0e0e; colo
 
 /* ИСПРАВЛЕНИЕ ИНПУТА (НИЖНЕЙ ПАНЕЛИ) */
 .chat-window {
+    flex-grow: 1; /* Чат забирает всё ОСТАЛЬНОЕ место */
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 .input-area {
@@ -101,9 +101,44 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0e0e0e; colo
     object-fit: cover;
 }
 
+/* Боковое меню теперь скрыто за экраном слева */
 .side-menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Прячем влево на всю ширину */
     width: 280px;
+    height: 100vh;
     background: #111;
+    z-index: 9999; /* Поверх всего */
+    transition: 0.3s ease; /* Плавный выезд */
     padding: 20px;
-    border-right: 1px solid #222;
+    border-right: 1px solid #333;
+}
+
+/* Когда добавляем класс active (через JS), меню выезжает */
+.side-menu.active {
+    left: 0;
+}
+
+/* Затемнение фона при открытом меню */
+#menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9998;
+}
+
+/* Исправляем ширину чата, чтобы он занимал всё свободное место */
+.app-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 350px; /* Список чатов фиксированный */
+    flex-shrink: 0;
 }

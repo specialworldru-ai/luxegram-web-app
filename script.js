@@ -172,4 +172,17 @@ function searchProfile() {
         renderContacts();
         selectChat(q);
     }
+
+function toggleMenu() {
+    const menu = document.getElementById('side-menu');
+    const overlay = document.getElementById('menu-overlay');
+    
+    menu.classList.toggle('active');
+    
+    // Показываем или скрываем темный фон
+    if (menu.classList.contains('active')) {
+        overlay.style.display = 'block';
+    } else {
+        overlay.style.display = 'none';
+    }
 }
