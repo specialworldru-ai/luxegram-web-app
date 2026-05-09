@@ -3,66 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuxeGram — Stable Edition</title>
-    <link rel="stylesheet" href="style.css">
+    <title>LuxeGram</title>
+    <!-- Подключаем иконки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Подключаем стили (убедись, что файл style.css лежит в той же папке) -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-theme"> <!-- Сразу включаем темную тему, чтобы не было белого экрана -->
     <audio id="notifySound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
 
     <div class="app-container">
-        <!-- ОКНО ПРОФИЛЯ -->
-        <div id="userProfile" class="user-profile-overlay hidden">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <button id="closeProfile"><i class="fa-solid fa-arrow-left"></i></button>
-                    <span>Информация</span>
-                    <i class="fa-solid fa-pen"></i>
-                </div>
-                <div class="profile-main">
-                    <div class="profile-avatar-big">L</div>
-                    <div class="profile-name">LuxeGram User</div>
-                    <div class="profile-status">в сети</div>
-                </div>
-                <div class="profile-info-list">
-                    <div class="info-item"><i class="fa-solid fa-phone"></i><div><div class="info-val">+7 999 000-00-00</div><div class="info-label">Номер телефона</div></div></div>
-                    <div class="info-item"><i class="fa-solid fa-at"></i><div><div class="info-val">@luxeffa_dev</div><div class="info-label">Имя пользователя</div></div></div>
-                    <div class="info-item"><i class="fa-solid fa-circle-info"></i><div><div class="info-val">Создаю лучший мессенджер!</div><div class="info-label">О себе</div></div></div>
+        <!-- Боковое меню -->
+        <div id="sideMenu" class="side-menu">
+            <div class="menu-header-dark" id="openProfileTrigger">
+                <div class="avatar">L</div>
+                <div class="menu-user-info">
+                    <div class="user-name">LuxeGram User</div>
+                    <div class="user-phone">+7 999 000-00-00</div>
                 </div>
             </div>
-        </div>
-
-        <!-- ЛЕВОЕ МЕНЮ (ЧЕРНАЯ ШАПКА ИЗ image_75f61c.png) -->
-        <div id="sideMenu" class="side-menu">
-            <div class="menu-content">
-                <div class="menu-header-dark" id="openProfileTrigger">
-                    <div class="avatar clickable">L</div>
-                    <div class="menu-user-info">
-                        <div class="user-name">LuxeGram User</div>
-                        <div class="user-phone">+7 999 000-00-00</div>
-                    </div>
-                </div>
-                <div class="menu-body">
-                    <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
-                    <div class="menu-item"><i class="fa-solid fa-user-group"></i> Создать группу</div>
-                    <div class="menu-item"><i class="fa-solid fa-bullhorn"></i> Создать канал</div>
-                    <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Избранное</div>
-                    <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
-                </div>
+            <div class="menu-body">
+                <div class="menu-item" id="themeToggle"><i class="fa-solid fa-moon"></i> Ночной режим</div>
+                <div class="menu-item"><i class="fa-solid fa-user-group"></i> Создать группу</div>
+                <div class="menu-item"><i class="fa-solid fa-bullhorn"></i> Создать канал</div>
+                <div class="menu-item"><i class="fa-solid fa-bookmark"></i> Избранное</div>
+                <div class="menu-item"><i class="fa-solid fa-gear"></i> Настройки</div>
             </div>
         </div>
 
         <aside class="sidebar">
             <header class="sidebar-header">
                 <div class="menu-icon" id="openMenuBtn"><i class="fa-solid fa-bars"></i></div>
-                <input type="text" placeholder="Поиск" class="search-input">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Поиск" class="search-input">
+                </div>
             </header>
             <div class="chats-list">
                 <div class="chat-item active" data-id="support" data-name="LuxeGram Support">
                     <div class="avatar">LS</div>
                     <div class="chat-info">
                         <div class="chat-name">LuxeGram Support</div>
-                        <div class="last-message">Мессенджер готов!</div>
+                        <div class="last-message">Стили восстановлены!</div>
                     </div>
                 </div>
                 <div class="chat-item" data-id="main_chat" data-name="Общий чат">
@@ -79,7 +61,6 @@
             <header class="chat-header">
                 <div class="chat-name" id="currentChatName">LuxeGram Support</div>
                 <div class="header-icons">
-                    <i class="fa-solid fa-magnifying-glass"></i>
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </div>
             </header>
@@ -98,6 +79,7 @@
         </main>
     </div>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>

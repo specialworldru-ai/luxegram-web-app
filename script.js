@@ -9,16 +9,15 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const MY_USERNAME = "LuxeGram User"; // Твоё имя
+const MY_USERNAME = "LuxeGram User";
 
 document.addEventListener('DOMContentLoaded', () => {
     let activeChatId = 'support';
     const container = document.getElementById('messagesContainer');
     const input = document.getElementById('messageInput');
-    const emojiPicker = document.getElementById('emojiPicker');
+    const sideMenu = document.getElementById('sideMenu');
     let unsubscribe = null;
 
-    // СЛУШАЕМ БАЗУ
     function listen() {
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('chats').doc(activeChatId).collection('messages')
@@ -31,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const html = `
                         <div class="message ${isOut ? 'outgoing' : ''}">
                             <span class="msg-user">${m.sender}</span>
-                            <span class="msg-text">${m.text}</span>
-                            <span class="msg-time">${m.time}</span>
+                            <span>${m.text}</span>
+                            <span class="msg-time">${m.time || ''}</span>
                         </div>`;
                     container.insertAdjacentHTML('beforeend', html);
                 });
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // ОТПРАВКА
     async function send() {
         const text = input.value.trim();
         if (!text) return;
@@ -49,20 +47,17 @@ document.addEventListener('DOMContentLoaded', () => {
         await db.collection('chats').doc(activeChatId).collection('messages').add({
             text, time, sender: MY_USERNAME, timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
-        document.getElementById('notifySound').play().catch(() => {});
         input.value = "";
-        emojiPicker.classList.add('hidden');
     }
 
-    // КНОПКИ И МЕНЮ (НИЧЕГО НЕ УДАЛЕНО)
+    // Обработчики кликов
     document.getElementById('sendBtn').onclick = send;
     input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
     
-    document.getElementById('emojiBtn').onclick = (e) => { e.stopPropagation(); emojiPicker.classList.toggle('hidden'); };
-    document.querySelectorAll('#emojiPicker span').forEach(s => {
-        s.onclick = () => { input.value += s.innerText; input.focus(); };
-    });
+    document.getElementById('openMenuBtn').onclick = (e) => {
+        e.stopPropagation();
+        sideMenu.classList.toggle('open');
+    };
 
     document.querySelectorAll('.chat-item').forEach(item => {
         item.onclick = () => {
@@ -74,15 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 
-    document.getElementById('openMenuBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('sideMenu').classList.add('open'); };
-    document.getElementById('openProfileTrigger').onclick = () => document.getElementById('userProfile').classList.remove('hidden');
-    document.getElementById('closeProfile').onclick = () => document.getElementById('userProfile').classList.add('hidden');
-    document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-theme');
-
-    document.addEventListener('click', () => {
-        document.getElementById('sideMenu').classList.remove('open');
-        emojiPicker.classList.add('hidden');
-    });
-
+    document.addEventListener('click', () => sideMenu.classList.remove('open'));
+    
     listen();
 });
